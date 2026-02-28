@@ -1,0 +1,257 @@
+---
+import MenuButton from './MenuButton.astro';
+---
+
+<div class="menu-container" data-menu-container>
+  <MenuButton open={false} />
+  <div
+    class="menu"
+    id="menu"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    data-menu
+  >
+    <nav class="navigation" aria-label="メニュー">
+      <ul class="list">
+        <li class="item">
+          <a class="link" href="#">ページ1</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ2</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ3</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ4</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ5</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ6</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ7</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ8</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ9</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ10</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ11</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ12</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ13</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ14</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ15</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ16</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ17</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ18</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ19</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ20</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ30</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ31</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ32</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<style lang="scss">
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+  @use '@/styles/extends' as *;
+
+  .menu {
+    background-color: var(--light-gray-color);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    z-index: 9999;
+    overflow: auto;
+    top: 0;
+    left: 0;
+    padding: var(--spacing-8xl) var(--inner-inline-padding);
+    color: var(--black-color);
+    transition:
+      opacity 0.5s,
+      visibility 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: scroll;
+
+    &.-open {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .item {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+  }
+
+  body.-open {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (): void => {
+    /* 要素の取得 */
+    const menu = document.querySelector<HTMLDivElement>('[data-menu]');
+    const button =
+      document.querySelector<HTMLButtonElement>('[data-menu-button]');
+    const body = document.querySelector<HTMLBodyElement>('body');
+    const container = document.querySelector<HTMLDivElement>(
+      '[data-menu-container]',
+    );
+
+    /* 要素が存在しない場合は処理を中断 */
+    if (!menu || !button || !body || !container) return;
+
+    /* フォーカス可能な要素を取得 */
+    const focusableAllElements = menu.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    /* フォーカス可能な要素の配列を作成 */
+    const focusableElements = [...Array.from(focusableAllElements), button];
+
+    /* フォーカス可能な要素の最初の要素を取得*/
+    const firstFocusableElement = focusableElements[0];
+
+    /* フォーカス可能な要素の最後の要素を取得 */
+    const lastFocusableElement =
+      focusableElements[focusableElements.length - 1];
+
+    /* メニューが開いているかどうかを管理する変数 */
+    let isMenuOpen = false;
+
+    /* メニューを開く関数 */
+    const openMenu = (isKeyboardEvent = false): void => {
+      isMenuOpen = true;
+
+      addOpenClass(menu);
+      addOpenClass(body);
+      addOpenClass(button);
+
+      button.setAttribute('aria-expanded', 'true');
+      button.setAttribute('aria-label', 'メニューを閉じる');
+      menu.setAttribute('aria-hidden', 'false');
+      // フォーカス移動: Transition時間分待つ
+      if (isKeyboardEvent) {
+        setTimeout(() => {
+          if (isMenuOpen) firstFocusableElement?.focus();
+        }, 50);
+      }
+    };
+
+    /* メニューを閉じる関数 */
+    const closeMenu = (): void => {
+      isMenuOpen = false;
+      removeOpenClass(menu);
+      removeOpenClass(body);
+      removeOpenClass(button);
+
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'メニューを開く');
+      menu.setAttribute('aria-hidden', 'true');
+    };
+
+    /* 開閉状態を管理するクラスを追加する関数 */
+    const addOpenClass = (el: HTMLElement): void => el.classList.add('-open');
+
+    /* 開閉状態を管理するクラスを削除する関数 */
+    const removeOpenClass = (el: HTMLElement): void =>
+      el.classList.remove('-open');
+
+    /* メニューを開くボタンをクリックした時の処理 */
+    button.addEventListener('click', (): void => {
+      if (!isMenuOpen) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
+    });
+
+    /* ボタンのキーボードイベント処理（Enterでメニューを開閉） */
+    button.addEventListener('keydown', (e: KeyboardEvent): void => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!isMenuOpen) {
+          openMenu(true);
+        } else {
+          closeMenu();
+        }
+      }
+    });
+
+    /* メニューのキーイベント処理 */
+    container.addEventListener('keydown', (e: KeyboardEvent): void => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        e.preventDefault();
+        closeMenu();
+        button.focus();
+      }
+      /* フォーカストラップの処理 */
+      if (e.key === 'Tab' && isMenuOpen) {
+        e.preventDefault();
+        const activeElement = document.activeElement;
+        if (!(activeElement instanceof HTMLElement)) return;
+        const currentIndex = focusableElements.indexOf(activeElement);
+        if (e.shiftKey) {
+          if (currentIndex === 0) {
+            lastFocusableElement?.focus();
+          } else {
+            focusableElements[currentIndex - 1]?.focus();
+          }
+        } else {
+          if (currentIndex === focusableElements.length - 1) {
+            firstFocusableElement?.focus();
+          } else {
+            focusableElements[currentIndex + 1]?.focus();
+          }
+        }
+      }
+    });
+  });
+</script>
