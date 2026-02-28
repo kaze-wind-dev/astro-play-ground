@@ -1,10 +1,9 @@
 ---
 import {
-  SITE_URL,
   SITE_NAME,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-  SITE_IMAGE,
+  SITE_IMAGE_PATH,
 } from '@/constants';
 import GoogleAnalytics from '@/components/GoogleAnalytics.astro';
 type Props = {
@@ -12,7 +11,6 @@ type Props = {
   description?: string;
   keywords?: string;
 };
-const path = Astro.url.pathname;
 const {
   pageTitle,
   description = SITE_DESCRIPTION,
@@ -20,14 +18,17 @@ const {
 } = Astro.props;
 const title = pageTitle ? `${SITE_NAME} | ${pageTitle}` : SITE_NAME;
 const isProd = import.meta.env.PROD;
+const basePath = import.meta.env.BASE_URL;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
+const ogImageUrl = new URL(SITE_IMAGE_PATH, Astro.site ?? Astro.url).toString();
 ---
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-  <link rel="sitemap" href="/sitemap-index.xml" />
-  <link rel="canonical" href={`${SITE_URL}${path}`} />
+  <link rel="icon" type="image/svg+xml" href={`${basePath}favicon.ico`} />
+  <link rel="sitemap" href={`${basePath}sitemap-index.xml`} />
+  <link rel="canonical" href={canonicalUrl} />
   <meta name="generator" content={Astro.generator} />
   <title>{pageTitle ? `${SITE_NAME} | ${pageTitle}` : SITE_NAME}</title>
   <meta name="description" content={description} />
@@ -35,11 +36,11 @@ const isProd = import.meta.env.PROD;
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content={`${SITE_URL}${path}`} />
-  <meta property="og:image" content={SITE_IMAGE} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={SITE_IMAGE} />
+  <meta name="twitter:image" content={ogImageUrl} />
   {isProd && <GoogleAnalytics />}
 </head>
