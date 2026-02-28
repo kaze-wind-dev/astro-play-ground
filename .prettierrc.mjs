@@ -4,17 +4,17 @@
  */
 
 export default {
-  plugins: ["prettier-plugin-astro"],
+  plugins: ['prettier-plugin-astro'],
   singleQuote: true,
   tabWidth: 2,
   semi: true,
-  arrowParens: "always",
+  arrowParens: 'always',
 
   overrides: [
     {
-      files: "*.astro",
+      files: '*.astro',
       options: {
-        parser: "astro",
+        parser: 'astro',
       },
     },
   ],
