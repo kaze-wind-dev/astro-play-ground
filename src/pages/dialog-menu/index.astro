@@ -1,0 +1,26 @@
+---
+import Layout from '../../layout/Layout.astro';
+import Section from '@/components/Section.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Menu from './Menu.astro';
+import MenuButton from './MenuButton.astro';
+const pageTitle = 'ダイアログメニュー';
+---
+
+<Layout pageTitle={pageTitle}>
+  <Section>
+    <PageTitle title={pageTitle} />
+    <MenuButton class="menu-button" menuIsOpen={false} />
+    <Menu />
+  </Section>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+
+  .play-ground {
+    overflow: hidden;
+  }
+</style>

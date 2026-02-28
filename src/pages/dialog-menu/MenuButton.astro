@@ -1,0 +1,93 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = {
+  menuIsOpen?: boolean;
+  class?: string;
+} & Omit<
+  HTMLAttributes<'button'>,
+  'aria-label' | 'aria-expanded' | 'aria-controls' | 'class'
+>;
+
+const { menuIsOpen = true, class: className, ...rest } = Astro.props;
+const ariaControls: HTMLAttributes<'button'>['aria-controls'] = 'menu';
+const ariaLabel: HTMLAttributes<'button'>['aria-label'] = menuIsOpen
+  ? 'メニューを閉じる'
+  : 'メニューを開く';
+const dataAttribute = menuIsOpen
+  ? { 'data-menu-close-button': true }
+  : { 'data-menu-open-button': true };
+---
+
+<button
+  class:list={[
+    'menu-button',
+    className ?? '',
+    menuIsOpen ? 'close-button' : 'open-button',
+  ]}
+  aria-label={ariaLabel}
+  aria-expanded="false"
+  aria-controls={ariaControls}
+  {...dataAttribute}
+  {...rest}
+>
+  <span class="line -first" aria-hidden="true"></span>
+  <span class="line -second" aria-hidden="true"></span>
+</button>
+
+<style lang="scss">
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+  @use '@/styles/extends' as *;
+
+  .menu-button {
+    width: 50px;
+    height: 50px;
+    background-color: var(--black-color);
+    position: relative;
+    z-index: 1;
+
+    &.open-button {
+      position: fixed;
+      top: calc(var(--header-height) / 2);
+      right: var(--spacing-md);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    &.open-button > .line {
+      &.-first {
+        top: 20px;
+      }
+
+      &.-second {
+        top: 28px;
+      }
+    }
+
+    &.close-button > .line {
+      &.-first {
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(210deg);
+      }
+
+      &.-second {
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+      }
+    }
+  }
+
+  .line {
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--white-color);
+    display: block;
+    width: 28px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition:
+      top 0.3s,
+      transform 0.3s;
+  }
+</style>
