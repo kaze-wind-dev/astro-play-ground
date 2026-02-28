@@ -7,14 +7,14 @@ export const SITE_KEYWORDS =
 export const SITE_IMAGE_PATH = '/ogp_image.jpg';
 
 export const NAVIGATION: Navigation[] = [
-  // {
-  //   href: '/dialog-menu',
-  //   label: 'ダイアログメニュー',
-  // },
-  // {
-  //   href: '/normal-menu',
-  //   label: 'メニュー（div + role）',
-  // },
+  {
+    href: '/dialog-menu',
+    label: 'ダイアログメニュー',
+  },
+  {
+    href: '/normal-menu',
+    label: 'メニュー（div + role）',
+  },
   // {
   //   href: '/tab',
   //   label: 'タブ',
