@@ -18,6 +18,24 @@ import MenuButton from './MenuButton.astro';
         <li class="item">
           <a class="link" href="#">ページ4</a>
         </li>
+        <li class="item">
+          <a class="link" href="#">ページ5</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ6</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ7</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ8</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ9</a>
+        </li>
+        <li class="item">
+          <a class="link" href="#">ページ10</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -54,6 +72,9 @@ import MenuButton from './MenuButton.astro';
   .container {
     background-color: var(--white-color);
     padding: 100px var(--inner-inline-padding);
+    height: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
   }
 
   .list {
@@ -68,7 +89,7 @@ import MenuButton from './MenuButton.astro';
   }
 
   .menu-button {
-    position: absolute;
+    position: fixed;
     top: calc(var(--header-height) / 2);
     transform: translateY(-50%);
     right: var(--spacing-md);
