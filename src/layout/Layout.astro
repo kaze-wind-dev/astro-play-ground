@@ -1,0 +1,22 @@
+---
+type Props = {
+  pageTitle: string;
+};
+const { pageTitle } = Astro.props;
+import Head from './Head.astro';
+---
+
+<html lang="ja">
+  <Head pageTitle={pageTitle} />
+  
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style>
+  :root {
+    --color-primary: #000;
+    --color-secondary: #fff;
+  }
+</style>

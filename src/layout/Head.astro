@@ -1,0 +1,45 @@
+---
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_IMAGE,
+} from '@/constants';
+import GoogleAnalytics from '@/components/GoogleAnalytics.astro';
+type Props = {
+  pageTitle?: string;
+  description?: string;
+  keywords?: string;
+};
+const path = Astro.url.pathname;
+const {
+  pageTitle,
+  description = SITE_DESCRIPTION,
+  keywords = SITE_KEYWORDS,
+} = Astro.props;
+const title = pageTitle ? `${SITE_NAME} | ${pageTitle}` : SITE_NAME;
+const isProd = import.meta.env.PROD;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="canonical" href={`${SITE_URL}${path}`} />
+  <meta name="generator" content={Astro.generator} />
+  <title>{pageTitle ? `${SITE_NAME} | ${pageTitle}` : SITE_NAME}</title>
+  <meta name="description" content={description} />
+  <meta name="keywords" content={keywords} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={`${SITE_URL}${path}`} />
+  <meta property="og:image" content={SITE_IMAGE} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={SITE_IMAGE} />
+  {isProd && <GoogleAnalytics />}
+</head>
