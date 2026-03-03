@@ -8,6 +8,10 @@ export const SITE_IMAGE_PATH = '/ogp_image.jpg';
 
 export const NAVIGATION: Navigation[] = [
   {
+    href: '/semantic-a11y',
+    label: 'HTMLセマンティクス検証（ケース1〜3）',
+  },
+  {
     href: '/dialog-menu',
     label: 'ダイアログメニュー',
   },

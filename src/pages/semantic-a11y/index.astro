@@ -1,0 +1,506 @@
+---
+import Layout from '@/layout/Layout.astro';
+import Section from '@/components/Section.astro';
+import PageTitle from '@/components/PageTitle.astro';
+
+const pageTitle = 'HTMLセマンティクス検証（ケース1〜6）';
+---
+
+<Layout pageTitle={pageTitle}>
+  <Section>
+    <PageTitle title={pageTitle} />
+    <p class="lead">
+      同一コンテンツをタグだけ変えて比較ができるサンプルです。
+      スクリーンリーダーの読み上げを確認してください。
+    </p>
+  </Section>
+
+  <Section>
+    <h2 class="section-title">ケース1: `div` / `section` / `article` の比較</h2>
+    <p class="section-note">
+      同じ情報を3つの要素で囲み、意味づけの差を確認します。
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title">パターンA: `div`</h3>
+        <div class="sample-box">
+          <h4>新入社員向けオンボーディング</h4>
+          <p>対象: フロントエンドチーム / 所要時間: 30分</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンB: `section`</h3>
+        <section class="sample-box">
+          <h4 id="case1-section-title">新入社員向けオンボーディング</h4>
+          <p>対象: フロントエンドチーム / 所要時間: 30分</p>
+        </section>
+        <section class="sample-box" aria-labelledby="case2-section-title">
+          <h4 id="case2-section-title">
+            新入社員向けオンボーディング(aria-labelledby付き)
+          </h4>
+          <p>対象: フロントエンドチーム / 所要時間: 30分</p>
+        </section>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンC: `article`</h3>
+        <article class="sample-box">
+          <h4>新入社員向けオンボーディング</h4>
+          <p>対象: フロントエンドチーム / 所要時間: 30分</p>
+        </article>
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <h2 class="section-title">ケース2: 一覧 + 記事構造の比較</h2>
+    <p class="section-note">
+      一覧データを、どの程度まで構造化するかを比較します。
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title">パターンA: ul, li, p</h3>
+        <ul class="sample-box">
+          <li>
+            <time datetime="2026-03-10">2026/03/10</time>
+            <p class="item-title-inline">
+              <a href="#">アクセシビリティ勉強会</a>
+            </p>
+          </li>
+          <li>
+            <time datetime="2026-03-17">2026/03/17</time>
+            <p class="item-title-inline">
+              <a href="#">HTMLセマンティクス勉強会</a>
+            </p>
+          </li>
+          <li>
+            <time datetime="2026-03-24">2026/03/24</time>
+            <p class="item-title-inline">
+              <a href="#">フォーム改善ワークショップ</a>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="card-title">パターンB: ul, li, heading</h3>
+        <ul class="sample-box">
+          <li>
+            <time datetime="2026-03-10">2026/03/10</time>
+            <h4 class="item-title-inline">アクセシビリティ勉強会</h4>
+          </li>
+          <li>
+            <time datetime="2026-03-17">2026/03/17</time>
+            <h4 class="item-title-inline">HTMLセマンティクス勉強会</h4>
+          </li>
+          <li>
+            <time datetime="2026-03-24">2026/03/24</time>
+            <h4 class="item-title-inline">フォーム改善ワークショップ</h4>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンC: ul, li, article, heading</h3>
+        <ul class="sample-box">
+          <li>
+            <article>
+              <h4 class="item-title"><a href="#">アクセシビリティ勉強会</a></h4>
+              <p>
+                <time datetime="2026-03-10">2026/03/10</time> | 担当: UIチーム
+              </p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h4 class="item-title">
+                <a href="#">HTMLセマンティクス勉強会</a>
+              </h4>
+              <p>
+                <time datetime="2026-03-17">2026/03/17</time>
+                | 担当: フロントエンドチーム
+              </p>
+            </article>
+          </li>
+          <li>
+            <article>
+              <h4 class="item-title">
+                <a href="#">フォーム改善ワークショップ</a>
+              </h4>
+              <p>
+                <time datetime="2026-03-24">2026/03/24</time>
+                | 担当: デザインシステムチーム
+              </p>
+            </article>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンD: div, article, heading</h3>
+        <div class="sample-box stack">
+          <article>
+            <h4 class="item-title"><a href="#">アクセシビリティ勉強会</a></h4>
+            <p>
+              <time datetime="2026-03-10">2026/03/10</time> | 担当: UIチーム
+            </p>
+          </article>
+          <article>
+            <h4 class="item-title"><a href="#">HTMLセマンティクス勉強会</a></h4>
+            <p>
+              <time datetime="2026-03-17">2026/03/17</time>
+              | 担当: フロントエンドチーム
+            </p>
+          </article>
+          <article>
+            <h4 class="item-title">
+              <a href="#">フォーム改善ワークショップ</a>
+            </h4>
+            <p>
+              <time datetime="2026-03-24">2026/03/24</time>
+              | 担当: デザインシステムチーム
+            </p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <h2 class="section-title">ケース3: カード並びの構造比較</h2>
+    <p class="section-note">
+      同一のカード内容を `div + p`、`ul + li + p`、`ul + li + heading`
+      で比較します。
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title">パターンA: `div` + `p`</h3>
+        <div class="sample-box stack">
+          <div class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📢</span>
+            <p class="sample-item-text">サイト更新のお知らせ</p>
+          </div>
+          <div class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📘</span>
+            <p class="sample-item-text">勉強会資料公開</p>
+          </div>
+          <div class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">🛠️</span>
+            <p class="sample-item-text">運用ルール改定</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンB: `ul` + `li` + `p`</h3>
+        <ul class="sample-box stack-list">
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📢</span>
+            <p class="sample-item-text">サイト更新のお知らせ</p>
+          </li>
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📘</span>
+            <p class="sample-item-text">勉強会資料公開</p>
+          </li>
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">🛠️</span>
+            <p class="sample-item-text">運用ルール改定</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンC: `ul` + `li` + `heading`</h3>
+        <ul class="sample-box stack-list">
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📢</span>
+            <h4 class="sample-item-heading">サイト更新のお知らせ</h4>
+          </li>
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">📘</span>
+            <h4 class="sample-item-heading">勉強会資料公開</h4>
+          </li>
+          <li class="sample-item">
+            <span aria-hidden="true" class="sample-item-icon">🛠️</span>
+            <h4 class="sample-item-heading">運用ルール改定</h4>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <h2 class="section-title">ケース4: `table` と `dl / dt / dd` の比較</h2>
+    <p class="section-note">
+      データが「行列の対応関係」か「用語と説明」かで、要素選択が変わるケースです。
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title">パターンA: `table`</h3>
+        <table class="sample-box sample-table">
+          <caption> 勉強会スケジュール </caption>
+          <thead>
+            <tr>
+              <th scope="col">日付</th>
+              <th scope="col">テーマ</th>
+              <th scope="col">担当</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><time datetime="2026-03-10">2026/03/10</time></td>
+              <td>アクセシビリティ基礎</td>
+              <td>UIチーム</td>
+            </tr>
+            <tr>
+              <td><time datetime="2026-03-17">2026/03/17</time></td>
+              <td>HTMLセマンティクス</td>
+              <td>フロントエンドチーム</td>
+            </tr>
+            <tr>
+              <td><time datetime="2026-03-24">2026/03/24</time></td>
+              <td>フォーム改善</td>
+              <td>デザインシステムチーム</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンB: `dl / dt / dd`</h3>
+        <dl class="sample-box sample-dl">
+          <dt>日付</dt>
+          <dd><time datetime="2026-03-17">2026/03/17</time></dd>
+          <dt>テーマ</dt>
+          <dd>HTMLセマンティクス</dd>
+          <dt>担当</dt>
+          <dd>フロントエンドチーム</dd>
+          <dt>会場</dt>
+          <dd>第3会議室</dd>
+        </dl>
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <h2 class="section-title">ケース5: テキスト要素の比較</h2>
+    <p class="section-note">
+      同一文章を `p` / `em` / `strong` / `small` / `b` / `span` で全体囲みして比較します。
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title">パターンA: `p`</h3>
+        <div class="sample-box">
+          <p>
+            次回の勉強会は必須参加です。資料は前日までに確認してください。
+          </p>
+          <p>Attendance at the next study session is required. Please review the materials by the day before.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンB: `em`</h3>
+        <div class="sample-box">
+          <em>次回の勉強会は必須参加です。資料は前日までに確認してください。</em>
+          <em>Attendance at the next study session is required. Please review the materials by the day before.</em>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンC: `strong`</h3>
+        <div class="sample-box">
+          <strong>次回の勉強会は必須参加です。資料は前日までに確認してください。</strong>
+          <strong>Attendance at the next study session is required. Please review the materials by the day before.</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンD: `small`</h3>
+        <div class="sample-box">
+          <small>次回の勉強会は必須参加です。資料は前日までに確認してください。</small>
+          <small>Attendance at the next study session is required. Please review the materials by the day before.</small>
+          <small>英語</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">パターンE: `b`</h3>
+        <div class="sample-box">
+          <b>次回の勉強会は必須参加です。資料は前日までに確認してください。</b>
+          <b>Attendance at the next study session is required. Please review the materials by the day before.</b>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">パターンF: `span`</h3>
+        <div class="sample-box">
+          <span>次回の勉強会は必須参加です。資料は前日までに確認してください。</span>
+          <span>Attendance at the next study session is required. Please review the materials by the day before.</span>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+</Layout>
+
+<style lang="scss">
+  .lead {
+    max-width: 80ch;
+    line-height: 1.8;
+  }
+
+  .section-title {
+    font-size: var(--heading-3);
+    font-weight: 700;
+    margin-block-end: var(--spacing-xs);
+  }
+
+  .section-note {
+    margin-block-end: var(--spacing-lg);
+    color: var(--gray-color);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+  }
+
+  .card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: var(--white-color);
+    padding: var(--spacing-md);
+  }
+
+  .card-title {
+    font-size: var(--heading-5);
+    margin-block-end: var(--spacing-sm);
+  }
+
+  .sample-box {
+    border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    list-style-type: '';
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--spacing-sm);
+  }
+
+  .stack-list {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sample-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    background-color: var(--white-color);
+  }
+
+  .sample-item-icon {
+    font-size: var(--font-size-2xl);
+  }
+
+  .sample-item-text,
+  .sample-item-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    margin: 0;
+  }
+
+  h4 {
+    margin-block-end: var(--spacing-2xs);
+    font-size: var(--heading-6);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .item-title {
+    font-weight: 700;
+    margin-block-end: var(--spacing-2xs);
+  }
+
+  .item-title-inline {
+    display: inline;
+    font-weight: 700;
+  }
+
+  ul {
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+  
+  ol {
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+
+  li + li {
+    margin-block-start: var(--spacing-xs);
+  }
+
+  .sample-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .sample-table caption {
+    margin-block-end: var(--spacing-xs);
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .sample-table th,
+  .sample-table td {
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-2xs) var(--spacing-xs);
+    text-align: left;
+  }
+
+  .sample-dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-2xs) var(--spacing-sm);
+  }
+
+  .sample-dl dt {
+    font-weight: 700;
+  }
+
+  .sample-dl dd {
+    margin: 0;
+  }
+
+  .span-join {
+    margin-block-start: var(--spacing-md);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-2xs);
+  }
+
+  .span-join-text {
+    width: 100%;
+    font-weight: 700;
+  }
+</style>
