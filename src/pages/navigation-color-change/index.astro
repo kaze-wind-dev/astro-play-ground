@@ -10,39 +10,39 @@ const pageTitle = '';
   <div class="side-menu">
     <ul class="list">
       <li class="item">
-        <a href="#section-01" class="link">Section01</a>
+        <a href="#section-01" class="link" data-anchor>Section01</a>
       </li>
       <li class="item">
-        <a href="#section-02" class="link">Section02</a>
+        <a href="#section-02" class="link" data-anchor>Section02</a>
       </li>
       <li class="item">
-        <a href="#section-03" class="link">Section03</a>
+        <a href="#section-03" class="link" data-anchor>Section03</a>
       </li>
       <li class="item">
-        <a href="#section-04" class="link">Section04</a>
+        <a href="#section-04" class="link" data-anchor>Section04</a>
       </li>
       <li class="item">
-        <a href="#section-05" class="link">Section05</a>
+        <a href="#section-05" class="link" data-anchor>Section05</a>
       </li>
     </ul>
   </div>
   <PageTitle title={pageTitle} />
-  <Section class="section-01">
+  <Section class="section-01" data-scroll-trigger data-theme="lightgray">
     <Heading2 title="Section01" />
   </Section>
-  <Section class="section-02">
+  <Section class="section-02" data-scroll-trigger data-theme="black">
     <Heading2 title="Section02" />
   </Section>
-  <Section class="section-03">
+  <Section class="section-03" data-scroll-trigger data-theme="bg">
     <Heading2 title="Section03" />
   </Section>
-  <Section class="section-04">
+  <Section class="section-04" data-scroll-trigger data-theme="lightgray">
     <Heading2 title="Section04" />
   </Section>
-  <Section class="section-05">
+  <Section class="section-05" data-scroll-trigger data-theme="black">
     <Heading2 title="Section05" />
   </Section>
-  <Section class="section-06">
+  <Section class="section-06" data-scroll-trigger data-theme="bg">
     <Heading2 title="Section06" />
   </Section>
 </Layout>
@@ -62,8 +62,6 @@ const pageTitle = '';
     left: 0;
     width: 80px;
     height: 100%;
-
-    // background-color: var(--white-color);
     color: var(--black-color);
   }
 
@@ -86,6 +84,7 @@ const pageTitle = '';
     font-size: var(--font-size-xs);
     text-align: center;
     place-content: center;
+    transition: color 0.3s ease;
 
     &.-current {
       background-color: var(--secondary-color);
@@ -139,8 +138,241 @@ const pageTitle = '';
    * カレント表示の要素は色変更しない
    *
    * スクロール時と、リサイズ時にも実行する（リサイズ時に実行されないことがあるため、スクロール時のみではなく、リサイズ時も実行する）
-   * 
+   *
    * あとは頑張って書く！
    * もっと他のやり方もないか検討する
    */
+
+  const targets = Array.from(
+    document.querySelectorAll('[data-scroll-trigger]'),
+  );
+  const anchors = Array.from(document.querySelectorAll('[data-anchor]'));
+
+  const mediaQuery: MediaQueryList = window.matchMedia('(min-width: 768px)');
+
+  const colorSchemes = {
+    white: 'var(--white-color)',
+    lightgray: 'var(--black-color)',
+    black: 'var(--white-color)',
+    bg: 'var(--black-color)',
+  } as const;
+
+  type Scheme = keyof typeof colorSchemes;
+
+  type AnchorCenter = {
+    center: number;
+    anchor: HTMLElement;
+  };
+
+  const getAnchorCenters = (): AnchorCenter[] => {
+    return anchors.map((anchor): AnchorCenter => {
+      const rect = anchor.getBoundingClientRect();
+      return {
+        center: rect.top + rect.height / 2,
+        anchor: anchor as HTMLElement,
+      };
+    });
+  };
+
+  const matchColor = (el: HTMLElement): (typeof colorSchemes)[Scheme] => {
+    const scheme = el.dataset.theme as Scheme;
+    return scheme && scheme in colorSchemes
+      ? colorSchemes[scheme]
+      : colorSchemes.white;
+  };
+
+  function updateAnchorColors(): void {
+    const snapshots = snapshotTargets();
+    if (!snapshots) return;
+    const anchorCenters = getAnchorCenters();
+    snapshots.forEach((snapshot) => {
+      anchorCenters.forEach((anchorCenter) => {
+        if (
+          snapshot.top <= anchorCenter.center &&
+          snapshot.bottom >= anchorCenter.center
+        ) {
+          anchorCenter.anchor.style.color = snapshot.scheme;
+        }
+      });
+    });
+  }
+
+  type Output = {
+    top: number;
+    bottom: number;
+    scheme: (typeof colorSchemes)[Scheme];
+  };
+  function snapshotTargets(): Output[] {
+    if (targets.length === 0 || anchors.length === 0) return [];
+    const output: Output[] = [];
+    for (const target of targets) {
+      const rect = target.getBoundingClientRect();
+      if (!(target instanceof HTMLElement)) continue;
+      const matchedColor = matchColor(target);
+      output.push({
+        top: rect.top,
+        bottom: rect.bottom,
+        scheme: matchedColor,
+      });
+    }
+    return output;
+  }
+
+  let rafId: number | null = null;
+
+  function requestUpdateAnchorColors(): void {
+    if (!mediaQuery.matches) return;
+    if (rafId !== null) return;
+    rafId = window.requestAnimationFrame(() => {
+      rafId = null;
+      updateAnchorColors();
+    });
+  }
+
+  const addDesktopListeners = () => {
+    window.addEventListener('scroll', requestUpdateAnchorColors, {
+      passive: true,
+    });
+    window.addEventListener('resize', requestUpdateAnchorColors);
+    requestUpdateAnchorColors();
+  };
+
+  const removeDesktopListeners = () => {
+    window.removeEventListener('scroll', requestUpdateAnchorColors);
+    window.removeEventListener('resize', requestUpdateAnchorColors);
+    console.log('removeDesktopListeners');
+  };
+
+  if (mediaQuery.matches) {
+    addDesktopListeners();
+  } else {
+    removeDesktopListeners();
+  }
+
+  mediaQuery.addEventListener('change', (e) => {
+    if (e.matches) {
+      addDesktopListeners();
+    } else {
+      removeDesktopListeners();
+    }
+  });
+
+  // // 既存の targets / anchors / mediaQuery / colorSchemes はそのまま流用想定
+
+  // type Scheme = keyof typeof colorSchemes;
+
+  // const matchColor = (el: HTMLElement): (typeof colorSchemes)[Scheme] => {
+  //   const scheme = el.dataset.theme as Scheme;
+  //   return scheme && scheme in colorSchemes
+  //     ? colorSchemes[scheme]
+  //     : colorSchemes.white;
+  // };
+
+  // // --- 追加: IOで「画面内にいる可能性があるセクション」だけ保持 ---
+  // const visibleTargets = new Set<HTMLElement>();
+
+  // const io = new IntersectionObserver(
+  //   (entries) => {
+  //     for (const entry of entries) {
+  //       const el = entry.target as HTMLElement;
+  //       if (entry.isIntersecting) visibleTargets.add(el);
+  //       else visibleTargets.delete(el);
+  //     }
+  //     // 交差状態が変わった時も更新
+  //     requestUpdateAnchorColors();
+  //   },
+  //   {
+  //     root: null,
+  //     threshold: 0, // 少しでも入ったら候補に
+  //   },
+  // );
+
+  // for (const t of targets) {
+  //   io.observe(t);
+  // }
+
+  // // --- rAF多重予約防止 ---
+  // let rafId: number | null = null;
+
+  // function requestUpdateAnchorColors(): void {
+  //   if (!mediaQuery.matches) return;
+  //   if (rafId !== null) return;
+
+  //   rafId = window.requestAnimationFrame(() => {
+  //     rafId = null;
+  //     updateAnchorColors();
+  //   });
+  // }
+
+  // function getAnchorCenters() {
+  //   return anchors.map((anchor) => {
+  //     const rect = anchor.getBoundingClientRect();
+  //     return {
+  //       center: rect.top + rect.height / 2,
+  //       el: anchor as HTMLElement,
+  //     };
+  //   });
+  // }
+
+  // function updateAnchorColors(): void {
+  //   // desktop以外は初期色に戻して終わる
+  //   if (!mediaQuery.matches) {
+  //     anchors.forEach(
+  //       (a) => ((a as HTMLElement).style.color = colorSchemes.white),
+  //     );
+  //     return;
+  //   }
+
+  //   // 候補がなければ全targetをfallback（初期直後など）
+  //   const candidates =
+  //     visibleTargets.size > 0
+  //       ? Array.from(visibleTargets)
+  //       : (targets as HTMLElement[]);
+
+  //   const targetSnapshots = candidates.map((target) => {
+  //     const rect = target.getBoundingClientRect();
+  //     return {
+  //       top: rect.top,
+  //       bottom: rect.bottom,
+  //       scheme: matchColor(target),
+  //     };
+  //   });
+
+  //   const anchorCenters = getAnchorCenters();
+
+  //   // いったん初期色
+  //   for (const a of anchors) {
+  //     (a as HTMLElement).style.color = colorSchemes.white;
+  //   }
+
+  //   // 今の仕様: 各アンカー中心が入っているtargetの色を適用
+  //   for (const a of anchorCenters) {
+  //     for (const t of targetSnapshots) {
+  //       if (t.top <= a.center && t.bottom >= a.center) {
+  //         a.el.style.color = t.scheme;
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
+
+  // // listenerの付け外し
+  // const bindDesktop = () => {
+  //   window.addEventListener('scroll', requestUpdateAnchorColors, {
+  //     passive: true,
+  //   });
+  //   window.addEventListener('resize', requestUpdateAnchorColors);
+  //   requestUpdateAnchorColors();
+  // };
+
+  // const unbindDesktop = () => {
+  //   window.removeEventListener('scroll', requestUpdateAnchorColors);
+  //   window.removeEventListener('resize', requestUpdateAnchorColors);
+  // };
+
+  // if (mediaQuery.matches) bindDesktop();
+  // mediaQuery.addEventListener('change', (e) => {
+  //   if (e.matches) bindDesktop();
+  //   else unbindDesktop();
+  // });
 </script>
