@@ -1,0 +1,146 @@
+---
+import Layout from '@/layout/Layout.astro';
+import Section from '@/components/Section.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Heading2 from '@/components/Heading2.astro';
+const pageTitle = '';
+---
+
+<Layout pageTitle={pageTitle}>
+  <div class="side-menu">
+    <ul class="list">
+      <li class="item">
+        <a href="#section-01" class="link">Section01</a>
+      </li>
+      <li class="item">
+        <a href="#section-02" class="link">Section02</a>
+      </li>
+      <li class="item">
+        <a href="#section-03" class="link">Section03</a>
+      </li>
+      <li class="item">
+        <a href="#section-04" class="link">Section04</a>
+      </li>
+      <li class="item">
+        <a href="#section-05" class="link">Section05</a>
+      </li>
+    </ul>
+  </div>
+  <PageTitle title={pageTitle} />
+  <Section class="section-01">
+    <Heading2 title="Section01" />
+  </Section>
+  <Section class="section-02">
+    <Heading2 title="Section02" />
+  </Section>
+  <Section class="section-03">
+    <Heading2 title="Section03" />
+  </Section>
+  <Section class="section-04">
+    <Heading2 title="Section04" />
+  </Section>
+  <Section class="section-05">
+    <Heading2 title="Section05" />
+  </Section>
+  <Section class="section-06">
+    <Heading2 title="Section06" />
+  </Section>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+
+  :root {
+    --_main-inline-padding: 0;
+  }
+
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 100%;
+
+    // background-color: var(--white-color);
+    color: var(--black-color);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .item {
+    font-weight: 700;
+  }
+
+  .link {
+    text-decoration: none;
+    height: 80px;
+    color: var(--black-color);
+    display: block;
+    border-radius: rem(4);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    place-content: center;
+
+    &.-current {
+      background-color: var(--secondary-color);
+      color: var(--white-color);
+    }
+
+    @include hover {
+      background-color: var(--secondary-color);
+      color: var(--white-color);
+    }
+  }
+
+  .section-01,
+  .section-02,
+  .section-03,
+  .section-04,
+  .section-05,
+  .section-06 {
+    height: 80dvh;
+    text-align: center;
+    margin-bottom: 0 !important;
+  }
+
+  .section-01,
+  .section-04 {
+    background-color: var(--light-gray-color);
+  }
+
+  .section-02,
+  .section-05 {
+    background-color: var(--black-color);
+    color: var(--white-color);
+  }
+
+  .section-03,
+  .section-06 {
+    background-color: var(--bg-color);
+  }
+</style>
+
+<script>
+  /*
+   * 実装方針についてまとめる
+   *
+   * セクションとリンクにdata属性を付与し、JSで取得する
+   * セクションの方には、data-theme定義しておき、この色に合わせてリンクの色を変更する
+   *
+   * セクションとリンクの矩形の中心を取り、その座標を取得する
+   * セクションの矩形とリンクの中心の距離が近くなれば、リンクの色を変更する
+   *
+   * カレント表示の要素は色変更しない
+   *
+   * スクロール時と、リサイズ時にも実行する（リサイズ時に実行されないことがあるため、スクロール時のみではなく、リサイズ時も実行する）
+   * 
+   * あとは頑張って書く！
+   * もっと他のやり方もないか検討する
+   */
+</script>

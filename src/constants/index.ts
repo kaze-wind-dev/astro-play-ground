@@ -19,6 +19,10 @@ export const NAVIGATION: Navigation[] = [
     href: '/normal-menu',
     label: 'メニュー（div + role）',
   },
+  {
+    href: '/navigation-color-change',
+    label: 'ナビゲーションカラーチェンジ',
+  },
   // {
   //   href: '/tab',
   //   label: 'タブ',
