@@ -20,8 +20,16 @@ export const NAVIGATION: Navigation[] = [
     label: 'メニュー（div + role）',
   },
   {
-    href: '/navigation-color-change',
-    label: 'ナビゲーションカラーチェンジ',
+    href: '/navigation-color-change-io',
+    label: 'ナビゲーションカラーチェンジ（Intersection Observer）',
+  },
+  {
+    href: '/navigation-color-change-rect',
+    label: 'ナビゲーションカラーチェンジ（getBoundingClientRect）',
+  },
+  {
+    href: '/navigation-color-change-mixblend',
+    label: 'ナビゲーションカラーチェンジ（mix-blend-mode）',
   },
   // {
   //   href: '/tab',

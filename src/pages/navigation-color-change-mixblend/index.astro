@@ -1,0 +1,275 @@
+---
+import Layout from '@/layout/Layout.astro';
+import Section from '@/components/Section.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Heading2 from '@/components/Heading2.astro';
+const pageTitle = '';
+---
+
+<Layout pageTitle={pageTitle}>
+  <div class="side-menu">
+    <ul class="list">
+      <li class="item">
+        <a href="#section-01" class="link" data-anchor>Section01</a>
+      </li>
+      <li class="item">
+        <a href="#section-02" class="link" data-anchor>Section02</a>
+      </li>
+      <li class="item">
+        <a href="#section-03" class="link" data-anchor>Section03</a>
+      </li>
+      <li class="item">
+        <a href="#section-04" class="link" data-anchor>Section04</a>
+      </li>
+      <li class="item">
+        <a href="#section-05" class="link" data-anchor>Section05</a>
+      </li>
+    </ul>
+  </div>
+  <PageTitle title={pageTitle} />
+  <Section class="section-01" data-scroll-trigger data-theme="lightgray">
+    <Heading2 title="Section01" />
+  </Section>
+  <Section class="section-02" data-scroll-trigger data-theme="black">
+    <Heading2 title="Section02" />
+  </Section>
+  <Section class="section-03" data-scroll-trigger data-theme="bg">
+    <Heading2 title="Section03" />
+  </Section>
+  <Section class="section-04" data-scroll-trigger data-theme="lightgray">
+    <Heading2 title="Section04" />
+  </Section>
+  <Section class="section-05" data-scroll-trigger data-theme="black">
+    <Heading2 title="Section05" />
+  </Section>
+  <Section class="section-06" data-scroll-trigger data-theme="bg">
+    <Heading2 title="Section06" />
+  </Section>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+
+  :root {
+    --_main-inline-padding: 0;
+  }
+
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 100%;
+    color: var(--white-color);
+    mix-blend-mode: difference;
+
+    @media (width <= 768px) {
+      width: 100%;
+      height: 80px;
+      top: unset;
+      bottom: 0;
+      background-color: var(--white-color);
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    @media (width <= 768px) {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .item {
+    font-weight: 700;
+  }
+
+  .link {
+    text-decoration: none;
+    height: 80px;
+
+    // color: var(--black-color);
+    display: block;
+    border-radius: rem(4);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    place-content: center;
+    transition: color 0.3s ease;
+
+    &.-current {
+      background-color: var(--secondary-color);
+      color: var(--white-color);
+    }
+
+    @include hover {
+      background-color: var(--secondary-color);
+      color: var(--white-color);
+    }
+  }
+
+  .section-01,
+  .section-02,
+  .section-03,
+  .section-04,
+  .section-05,
+  .section-06 {
+    height: 80dvh;
+    text-align: center;
+    margin-bottom: 0 !important;
+  }
+
+  .section-01,
+  .section-04 {
+    background-color: var(--light-gray-color);
+  }
+
+  .section-02,
+  .section-05 {
+    background-color: var(--black-color);
+    color: var(--white-color);
+  }
+
+  .section-03,
+  .section-06 {
+    background-color: var(--bg-color);
+  }
+</style>
+
+<script>
+  // const colorByTheme = {
+  //   white: 'var(--black-color)',
+  //   lightgray: 'var(--black-color)',
+  //   black: 'var(--white-color)',
+  //   bg: 'var(--black-color)',
+  // } as const;
+
+  // type Theme = keyof typeof colorByTheme;
+
+  // const sections = document.querySelectorAll<HTMLElement>(
+  //   '[data-scroll-trigger]',
+  // );
+  // const navAnchors = document.querySelectorAll<HTMLElement>('[data-anchor]');
+  // const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+  // const sectionsArr = Array.from(sections);
+
+  // const observer = new IntersectionObserver(
+  //   (entries) => {
+  //     entries.forEach((entry) => {
+  //       console.log(entry);
+  //       const target = entry.target as HTMLElement;
+  //       console.log(entry.isIntersecting);
+  //     });
+  //   },
+  //   { root: null, threshold: 0 },
+  // );
+  // sections.forEach((section) => {
+  //   observer.observe(section);
+  // });
+
+  //   // 各リンクに対応する Observer を保持
+  //   let observers: IntersectionObserver[] = [];
+
+  //   // リンクごとの交差状態を管理
+  //   const anchorIntersections = new Map<HTMLElement, Set<HTMLElement>>();
+
+  //   const getColor = (el: HTMLElement): string => {
+  //     const theme = el.dataset.theme as Theme;
+  //     return colorByTheme[theme] ?? colorByTheme.white;
+  //   };
+
+  //   // DOM順で最初の交差セクションを取得
+  //   const getTopSection = (intersecting: Set<HTMLElement>): HTMLElement | null => {
+  //     if (intersecting.size === 0) return null;
+  //     if (intersecting.size === 1) return intersecting.values().next().value ?? null;
+  //     for (const section of sectionsArr) {
+  //       if (intersecting.has(section)) return section;
+  //     }
+  //     return null;
+  //   };
+
+  //   // リンクの色を更新
+  //   const updateColor = (anchor: HTMLElement): void => {
+  //     const intersecting = anchorIntersections.get(anchor);
+  //     if (!intersecting) return;
+  //     const topSection = getTopSection(intersecting);
+  //     anchor.style.color = topSection ? getColor(topSection) : colorByTheme.white;
+  //   };
+
+  //   // Observer を作成
+  //   const createObservers = (): void => {
+  //     // 既存の Observer を破棄
+  //     observers.forEach((obs) => obs.disconnect());
+  //     observers = [];
+  //     anchorIntersections.clear();
+
+  //     if (!mediaQuery.matches) return;
+
+  //     navAnchors.forEach((anchor) => {
+  //       // リンクの中心Y座標を取得（初期化時のみ getBoundingClientRect 使用）
+  //       const rect = anchor.getBoundingClientRect();
+  //       const centerY = rect.top + rect.height / 2;
+
+  //       // rootMargin で「検知線」を作成
+  //       // 上: -centerY px、下: -(viewport - centerY - 1) px → 1px幅の検知エリア
+  //       const topMargin = Math.floor(centerY);
+  //       const bottomMargin = Math.floor(window.innerHeight - centerY - 1);
+
+  //       // このリンク用の交差セクション Set を初期化
+  //       const intersecting = new Set<HTMLElement>();
+  //       anchorIntersections.set(anchor, intersecting);
+
+  //       const observer = new IntersectionObserver(
+  //         (entries) => {
+  //           entries.forEach((entry) => {
+  //             const section = entry.target as HTMLElement;
+  //             if (entry.isIntersecting) {
+  //               intersecting.add(section);
+  //             } else {
+  //               intersecting.delete(section);
+  //             }
+  //           });
+  //           updateColor(anchor);
+  //         },
+  //         {
+  //           root: null,
+  //           rootMargin: `-${topMargin}px 0px -${bottomMargin}px 0px`,
+  //           threshold: 0,
+  //         },
+  //       );
+
+  //       sections.forEach((section) => observer.observe(section));
+  //       observers.push(observer);
+  //     });
+  //   };
+
+  //   // Observer を破棄
+  //   const destroyObservers = (): void => {
+  //     observers.forEach((obs) => obs.disconnect());
+  //     observers = [];
+  //     anchorIntersections.clear();
+  //     navAnchors.forEach((a) => (a.style.color = colorByTheme.white));
+  //   };
+
+  //   // 初期化
+  //   if (mediaQuery.matches) createObservers();
+
+  //   // リサイズ時に再作成（デバウンス）
+  //   let resizeTimer = 0;
+  //   window.addEventListener('resize', () => {
+  //     clearTimeout(resizeTimer);
+  //     resizeTimer = window.setTimeout(() => {
+  //       mediaQuery.matches ? createObservers() : destroyObservers();
+  //     }, 150);
+  //   });
+
+  //   // メディアクエリ変更時
+  //   mediaQuery.addEventListener('change', (e) => {
+  //     e.matches ? createObservers() : destroyObservers();
+  //   });
+</script>
