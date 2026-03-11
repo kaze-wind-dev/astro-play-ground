@@ -63,12 +63,25 @@ const pageTitle = '';
     width: 80px;
     height: 100%;
     color: var(--black-color);
+
+    @media (width <= 768px) {
+      width: 100%;
+      height: 80px;
+      top: unset;
+      bottom: 0;
+      background-color: var(--white-color);
+    }
   }
 
   .list {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    @media (width <= 768px) {
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   .item {
@@ -127,8 +140,8 @@ const pageTitle = '';
 
 <script>
   /*
-  * 型定義
-  */
+   * 型定義
+   */
   const colorByTheme = {
     white: 'var(--black-color)',
     lightgray: 'var(--black-color)',
@@ -146,9 +159,11 @@ const pageTitle = '';
   };
 
   /*
-  * 要素取得・状態
-  */
-  const sections = document.querySelectorAll<HTMLElement>('[data-scroll-trigger]');
+   * 要素取得・状態
+   */
+  const sections = document.querySelectorAll<HTMLElement>(
+    '[data-scroll-trigger]',
+  );
   const navAnchors = document.querySelectorAll<HTMLElement>('[data-anchor]');
   const mediaQuery = window.matchMedia('(min-width: 768px)'); // メディアクエリ
   const visibleSections = new Set<HTMLElement>(); // ビューポート内に表示中のセクション
@@ -165,7 +180,7 @@ const pageTitle = '';
     const theme = el.dataset.theme as Theme;
     return colorByTheme[theme] ?? colorByTheme.white;
   };
-  
+
   /**
    * 要素の中心Y座標を取得
    * @param el - 要素
@@ -202,7 +217,7 @@ const pageTitle = '';
     navAnchors.forEach((anchor) => {
       const centerY = getCenterY(anchor);
       const match = snapshots.find(
-        (s) => s.top <= centerY && s.bottom >= centerY
+        (s) => s.top <= centerY && s.bottom >= centerY,
       );
       if (match) {
         anchor.style.color = match.color;
@@ -228,7 +243,9 @@ const pageTitle = '';
    */
   const setListeners = (add: boolean): void => {
     const method = add ? 'addEventListener' : 'removeEventListener';
-    window[method]('scroll', requestUpdate, { passive: true } as EventListenerOptions);
+    window[method]('scroll', requestUpdate, {
+      passive: true,
+    } as EventListenerOptions);
     window[method]('resize', requestUpdate);
     if (add) requestUpdate();
   };
@@ -271,7 +288,7 @@ const pageTitle = '';
       const shouldListen = visibleSections.size > 0 && mediaQuery.matches;
       syncListenerState(shouldListen);
     },
-    { root: null, threshold: 0 }
+    { root: null, threshold: 0 },
   );
 
   sections.forEach((section) => observer.observe(section));
