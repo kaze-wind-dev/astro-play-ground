@@ -127,252 +127,160 @@ const pageTitle = '';
 
 <script>
   /*
-   * 実装方針についてまとめる
-   *
-   * セクションとリンクにdata属性を付与し、JSで取得する
-   * セクションの方には、data-theme定義しておき、この色に合わせてリンクの色を変更する
-   *
-   * セクションとリンクの矩形の中心を取り、その座標を取得する
-   * セクションの矩形とリンクの中心の距離が近くなれば、リンクの色を変更する
-   *
-   * カレント表示の要素は色変更しない
-   *
-   * スクロール時と、リサイズ時にも実行する（リサイズ時に実行されないことがあるため、スクロール時のみではなく、リサイズ時も実行する）
-   *
-   * あとは頑張って書く！
-   * もっと他のやり方もないか検討する
-   */
-
-  const targets = Array.from(
-    document.querySelectorAll('[data-scroll-trigger]'),
-  );
-  const anchors = Array.from(document.querySelectorAll('[data-anchor]'));
-
-  const mediaQuery: MediaQueryList = window.matchMedia('(min-width: 768px)');
-
-  const colorSchemes = {
-    white: 'var(--white-color)',
+  * 型定義
+  */
+  const colorByTheme = {
+    white: 'var(--black-color)',
     lightgray: 'var(--black-color)',
     black: 'var(--white-color)',
     bg: 'var(--black-color)',
   } as const;
 
-  type Scheme = keyof typeof colorSchemes;
+  type Theme = keyof typeof colorByTheme;
+  type ColorValue = (typeof colorByTheme)[Theme];
 
-  type AnchorCenter = {
-    center: number;
-    anchor: HTMLElement;
+  type SectionSnapshot = {
+    top: number;
+    bottom: number;
+    color: ColorValue;
   };
 
-  const getAnchorCenters = (): AnchorCenter[] => {
-    return anchors.map((anchor): AnchorCenter => {
-      const rect = anchor.getBoundingClientRect();
+  /*
+  * 要素取得・状態
+  */
+  const sections = document.querySelectorAll<HTMLElement>('[data-scroll-trigger]');
+  const navAnchors = document.querySelectorAll<HTMLElement>('[data-anchor]');
+  const mediaQuery = window.matchMedia('(min-width: 768px)'); // メディアクエリ
+  const visibleSections = new Set<HTMLElement>(); // ビューポート内に表示中のセクション
+
+  let isListening = false; // リスナーの有効・無効
+  let rafId: number | null = null; // RAFのID（アニメーションフレーム）
+
+  /**
+   * テーマに応じた色を取得
+   * @param el - 要素
+   * @returns 色
+   */
+  const getColorForTheme = (el: HTMLElement): ColorValue => {
+    const theme = el.dataset.theme as Theme;
+    return colorByTheme[theme] ?? colorByTheme.white;
+  };
+  
+  /**
+   * 要素の中心Y座標を取得
+   * @param el - 要素
+   * @returns 中心Y座標
+   */
+  const getCenterY = (el: Element): number => {
+    const rect = el.getBoundingClientRect();
+    return rect.top + rect.height / 2;
+  };
+
+  /**
+   * セクションのスナップショットを取得
+   * @returns スナップショット
+   */
+  const getSectionSnapshots = (): SectionSnapshot[] => {
+    const targets = visibleSections.size > 0 ? visibleSections : sections;
+    return Array.from(targets).map((section) => {
+      const rect = section.getBoundingClientRect();
       return {
-        center: rect.top + rect.height / 2,
-        anchor: anchor as HTMLElement,
+        top: rect.top,
+        bottom: rect.bottom,
+        color: getColorForTheme(section),
       };
     });
   };
 
-  const matchColor = (el: HTMLElement): (typeof colorSchemes)[Scheme] => {
-    const scheme = el.dataset.theme as Scheme;
-    return scheme && scheme in colorSchemes
-      ? colorSchemes[scheme]
-      : colorSchemes.white;
-  };
+  /**
+   * アンカーの色を更新
+   */
+  const updateAnchorColors = (): void => {
+    const snapshots = getSectionSnapshots();
+    if (snapshots.length === 0) return;
 
-  function updateAnchorColors(): void {
-    const snapshots = snapshotTargets();
-    if (!snapshots) return;
-    const anchorCenters = getAnchorCenters();
-    snapshots.forEach((snapshot) => {
-      anchorCenters.forEach((anchorCenter) => {
-        if (
-          snapshot.top <= anchorCenter.center &&
-          snapshot.bottom >= anchorCenter.center
-        ) {
-          anchorCenter.anchor.style.color = snapshot.scheme;
-        }
-      });
+    navAnchors.forEach((anchor) => {
+      const centerY = getCenterY(anchor);
+      const match = snapshots.find(
+        (s) => s.top <= centerY && s.bottom >= centerY
+      );
+      if (match) {
+        anchor.style.color = match.color;
+      }
     });
-  }
-
-  type Output = {
-    top: number;
-    bottom: number;
-    scheme: (typeof colorSchemes)[Scheme];
   };
-  function snapshotTargets(): Output[] {
-    if (targets.length === 0 || anchors.length === 0) return [];
-    const output: Output[] = [];
-    for (const target of targets) {
-      const rect = target.getBoundingClientRect();
-      if (!(target instanceof HTMLElement)) continue;
-      const matchedColor = matchColor(target);
-      output.push({
-        top: rect.top,
-        bottom: rect.bottom,
-        scheme: matchedColor,
-      });
-    }
-    return output;
-  }
 
-  let rafId: number | null = null;
-
-  function requestUpdateAnchorColors(): void {
-    if (!mediaQuery.matches) return;
-    if (rafId !== null) return;
-    rafId = window.requestAnimationFrame(() => {
+  /**
+   * アップデートをリクエスト
+   * アニメーションフレームをリクエストして、アンカーの色を更新
+   */
+  const requestUpdate = (): void => {
+    if (!mediaQuery.matches || rafId !== null) return;
+    rafId = requestAnimationFrame(() => {
       rafId = null;
       updateAnchorColors();
     });
-  }
-
-  const addDesktopListeners = () => {
-    window.addEventListener('scroll', requestUpdateAnchorColors, {
-      passive: true,
-    });
-    window.addEventListener('resize', requestUpdateAnchorColors);
-    requestUpdateAnchorColors();
   };
 
-  const removeDesktopListeners = () => {
-    window.removeEventListener('scroll', requestUpdateAnchorColors);
-    window.removeEventListener('resize', requestUpdateAnchorColors);
-    console.log('removeDesktopListeners');
+  /**
+   * リスナーを管理
+   * @param add - 追加するかどうか
+   */
+  const setListeners = (add: boolean): void => {
+    const method = add ? 'addEventListener' : 'removeEventListener';
+    window[method]('scroll', requestUpdate, { passive: true } as EventListenerOptions);
+    window[method]('resize', requestUpdate);
+    if (add) requestUpdate();
   };
 
-  if (mediaQuery.matches) {
-    addDesktopListeners();
-  } else {
-    removeDesktopListeners();
-  }
+  /**
+   * アンカーの色を初期化
+   */
+  const resetAnchorColors = (): void => {
+    navAnchors.forEach((a) => (a.style.color = colorByTheme.white));
+  };
 
-  mediaQuery.addEventListener('change', (e) => {
-    if (e.matches) {
-      addDesktopListeners();
-    } else {
-      removeDesktopListeners();
+  /**
+   * リスナーを管理
+   * @param shouldListen - リスナーを追加するかどうか
+   */
+  const syncListenerState = (shouldListen: boolean): void => {
+    if (shouldListen && !isListening) {
+      setListeners(true);
+      isListening = true;
+    } else if (!shouldListen && isListening) {
+      setListeners(false);
+      resetAnchorColors();
+      isListening = false;
     }
+  };
+
+  /**
+   * IntersectionObserver
+   * ビューポート内に表示中のセクションを管理し、リスナーを管理
+   */
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const target = entry.target as HTMLElement;
+        entry.isIntersecting
+          ? visibleSections.add(target)
+          : visibleSections.delete(target);
+      });
+
+      const shouldListen = visibleSections.size > 0 && mediaQuery.matches;
+      syncListenerState(shouldListen);
+    },
+    { root: null, threshold: 0 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+
+  /**
+   * メディアクエリ変更時
+   */
+  mediaQuery.addEventListener('change', (e: MediaQueryListEvent): void => {
+    const shouldListen = e.matches && visibleSections.size > 0;
+    syncListenerState(shouldListen);
   });
-
-  // // 既存の targets / anchors / mediaQuery / colorSchemes はそのまま流用想定
-
-  // type Scheme = keyof typeof colorSchemes;
-
-  // const matchColor = (el: HTMLElement): (typeof colorSchemes)[Scheme] => {
-  //   const scheme = el.dataset.theme as Scheme;
-  //   return scheme && scheme in colorSchemes
-  //     ? colorSchemes[scheme]
-  //     : colorSchemes.white;
-  // };
-
-  // // --- 追加: IOで「画面内にいる可能性があるセクション」だけ保持 ---
-  // const visibleTargets = new Set<HTMLElement>();
-
-  // const io = new IntersectionObserver(
-  //   (entries) => {
-  //     for (const entry of entries) {
-  //       const el = entry.target as HTMLElement;
-  //       if (entry.isIntersecting) visibleTargets.add(el);
-  //       else visibleTargets.delete(el);
-  //     }
-  //     // 交差状態が変わった時も更新
-  //     requestUpdateAnchorColors();
-  //   },
-  //   {
-  //     root: null,
-  //     threshold: 0, // 少しでも入ったら候補に
-  //   },
-  // );
-
-  // for (const t of targets) {
-  //   io.observe(t);
-  // }
-
-  // // --- rAF多重予約防止 ---
-  // let rafId: number | null = null;
-
-  // function requestUpdateAnchorColors(): void {
-  //   if (!mediaQuery.matches) return;
-  //   if (rafId !== null) return;
-
-  //   rafId = window.requestAnimationFrame(() => {
-  //     rafId = null;
-  //     updateAnchorColors();
-  //   });
-  // }
-
-  // function getAnchorCenters() {
-  //   return anchors.map((anchor) => {
-  //     const rect = anchor.getBoundingClientRect();
-  //     return {
-  //       center: rect.top + rect.height / 2,
-  //       el: anchor as HTMLElement,
-  //     };
-  //   });
-  // }
-
-  // function updateAnchorColors(): void {
-  //   // desktop以外は初期色に戻して終わる
-  //   if (!mediaQuery.matches) {
-  //     anchors.forEach(
-  //       (a) => ((a as HTMLElement).style.color = colorSchemes.white),
-  //     );
-  //     return;
-  //   }
-
-  //   // 候補がなければ全targetをfallback（初期直後など）
-  //   const candidates =
-  //     visibleTargets.size > 0
-  //       ? Array.from(visibleTargets)
-  //       : (targets as HTMLElement[]);
-
-  //   const targetSnapshots = candidates.map((target) => {
-  //     const rect = target.getBoundingClientRect();
-  //     return {
-  //       top: rect.top,
-  //       bottom: rect.bottom,
-  //       scheme: matchColor(target),
-  //     };
-  //   });
-
-  //   const anchorCenters = getAnchorCenters();
-
-  //   // いったん初期色
-  //   for (const a of anchors) {
-  //     (a as HTMLElement).style.color = colorSchemes.white;
-  //   }
-
-  //   // 今の仕様: 各アンカー中心が入っているtargetの色を適用
-  //   for (const a of anchorCenters) {
-  //     for (const t of targetSnapshots) {
-  //       if (t.top <= a.center && t.bottom >= a.center) {
-  //         a.el.style.color = t.scheme;
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // // listenerの付け外し
-  // const bindDesktop = () => {
-  //   window.addEventListener('scroll', requestUpdateAnchorColors, {
-  //     passive: true,
-  //   });
-  //   window.addEventListener('resize', requestUpdateAnchorColors);
-  //   requestUpdateAnchorColors();
-  // };
-
-  // const unbindDesktop = () => {
-  //   window.removeEventListener('scroll', requestUpdateAnchorColors);
-  //   window.removeEventListener('resize', requestUpdateAnchorColors);
-  // };
-
-  // if (mediaQuery.matches) bindDesktop();
-  // mediaQuery.addEventListener('change', (e) => {
-  //   if (e.matches) bindDesktop();
-  //   else unbindDesktop();
-  // });
 </script>
