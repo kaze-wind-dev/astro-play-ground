@@ -138,7 +138,7 @@ const pageTitle = '';
   }
 </style>
 
-<script>
+<!-- <script>
   /*
    * 型定義
    */
@@ -279,12 +279,13 @@ const pageTitle = '';
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        console.log(entry);
         const target = entry.target as HTMLElement;
         entry.isIntersecting
           ? visibleSections.add(target)
           : visibleSections.delete(target);
       });
-
+     
       const shouldListen = visibleSections.size > 0 && mediaQuery.matches;
       syncListenerState(shouldListen);
     },
@@ -299,5 +300,129 @@ const pageTitle = '';
   mediaQuery.addEventListener('change', (e: MediaQueryListEvent): void => {
     const shouldListen = e.matches && visibleSections.size > 0;
     syncListenerState(shouldListen);
+  });
+</script> -->
+
+<script>
+  // ===================
+  // IntersectionObserver のみ（複数 Observer + rootMargin）
+  // ===================
+  // getBoundingClientRect は初期化・リサイズ時のみ使用
+  // スクロール中は IO のネイティブ処理に任せる
+
+  const colorByTheme = {
+    white: 'var(--black-color)',
+    lightgray: 'var(--black-color)',
+    black: 'var(--white-color)',
+    bg: 'var(--black-color)',
+  } as const;
+
+  type Theme = keyof typeof colorByTheme;
+
+  const sections = document.querySelectorAll<HTMLElement>('[data-scroll-trigger]');
+  const navAnchors = document.querySelectorAll<HTMLElement>('[data-anchor]');
+  const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+  const sectionsArr = Array.from(sections);
+
+  // 各リンクに対応する Observer を保持
+  let observers: IntersectionObserver[] = [];
+
+  // リンクごとの交差状態を管理
+  const anchorIntersections = new Map<HTMLElement, Set<HTMLElement>>();
+
+  const getColor = (el: HTMLElement): string => {
+    const theme = el.dataset.theme as Theme;
+    return colorByTheme[theme] ?? colorByTheme.white;
+  };
+
+  // DOM順で最初の交差セクションを取得
+  const getTopSection = (intersecting: Set<HTMLElement>): HTMLElement | null => {
+    if (intersecting.size === 0) return null;
+    if (intersecting.size === 1) return intersecting.values().next().value ?? null;
+    for (const section of sectionsArr) {
+      if (intersecting.has(section)) return section;
+    }
+    return null;
+  };
+
+  // リンクの色を更新
+  const updateColor = (anchor: HTMLElement): void => {
+    const intersecting = anchorIntersections.get(anchor);
+    if (!intersecting) return;
+    const topSection = getTopSection(intersecting);
+    anchor.style.color = topSection ? getColor(topSection) : colorByTheme.white;
+  };
+
+  // Observer を作成
+  const createObservers = (): void => {
+    // 既存の Observer を破棄
+    observers.forEach((obs) => obs.disconnect());
+    observers = [];
+    anchorIntersections.clear();
+
+    if (!mediaQuery.matches) return;
+
+    navAnchors.forEach((anchor) => {
+      // リンクの中心Y座標を取得（初期化時のみ getBoundingClientRect 使用）
+      const rect = anchor.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+
+      // rootMargin で「検知線」を作成
+      // 上: -centerY px、下: -(viewport - centerY - 1) px → 1px幅の検知エリア
+      const topMargin = Math.floor(centerY);
+      const bottomMargin = Math.floor(window.innerHeight - centerY - 1);
+
+      // このリンク用の交差セクション Set を初期化
+      const intersecting = new Set<HTMLElement>();
+      anchorIntersections.set(anchor, intersecting);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const section = entry.target as HTMLElement;
+            if (entry.isIntersecting) {
+              intersecting.add(section);
+            } else {
+              intersecting.delete(section);
+            }
+          });
+          updateColor(anchor);
+        },
+        {
+          root: null,
+          rootMargin: `-${topMargin}px 0px -${bottomMargin}px 0px`,
+          threshold: 0,
+        },
+      );
+
+      sections.forEach((section) => observer.observe(section));
+      observers.push(observer);
+    });
+  };
+
+  // Observer を破棄
+  const destroyObservers = (): void => {
+    observers.forEach((obs) => obs.disconnect());
+    observers = [];
+    anchorIntersections.clear();
+    navAnchors.forEach((a) => (a.style.color = colorByTheme.white));
+  };
+
+  // 初期化
+  if (mediaQuery.matches) createObservers();
+
+  // リサイズ時に再作成（デバウンス）
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      mediaQuery.matches ? createObservers() : destroyObservers();
+    }, 150);
+  });
+
+  // メディアクエリ変更時
+  mediaQuery.addEventListener('change', (e) => {
+    e.matches ? createObservers() : destroyObservers();
   });
 </script>
