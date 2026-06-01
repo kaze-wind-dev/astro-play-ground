@@ -1,0 +1,36 @@
+---
+import { NAVIGATION } from './navigation';
+import type { Navigation } from '@/type/navigation';
+import Layout from '@/layout/Layout.astro';
+import Section from '@/components/Section.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import ButtonLink from '@/components/ButtonLink.astro';
+
+const pageTitle = 'Animation';
+---
+
+<Layout pageTitle={pageTitle}>
+  <PageTitle title="Animation" />
+  <Section>
+    <ul class="button-links">
+      {
+        NAVIGATION.map((item: Navigation) => (
+          <li class="button-link-item">
+            <ButtonLink href={`/animation/${item.href}`} label={item.label} />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+  @use '@/styles/mixin' as *;
+
+  .button-links {
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--spacing-sm);
+  }
+</style>

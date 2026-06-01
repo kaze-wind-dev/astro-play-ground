@@ -7,7 +7,7 @@ const [owner, repo] = repository ? repository.split('/') : [];
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 const site =
   process.env.SITE_URL ||
-  (owner ? `https://${owner}.github.io` : 'http://localhost:4321');
+  (owner ? 'https://kaze-wind-dev.github.io' : 'http://localhost:4321');
 const base =
   process.env.BASE_PATH || (isGitHubActions && repo ? `/${repo}` : '/');
 

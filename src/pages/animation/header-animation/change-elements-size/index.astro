@@ -1,0 +1,106 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="スクロール後に要素の大きさ変化を与えるアニメーション">
+  <PageTitle title="スクロール後に要素の大きさ変化を与えるアニメーション" />
+  <div class="container">
+    <header class="header" data-header-container>
+      <p class="logo">Logo</p>
+
+      <ul class="list">
+        <li class="item">
+          <a href="" class="link">リンク1</a>
+        </li>
+        <li class="item">
+          <a href="" class="link">リンク2</a>
+        </li>
+        <li class="item">
+          <a href="" class="link">リンク3</a>
+        </li>
+      </ul>
+      <div class="a button">ボタン</div>
+    </header>
+  </div>
+</Layout>
+
+<style lang="scss">
+  .container {
+    background-color: var(--bg-color);
+    height: 200vh;
+    width: 100%;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: var(--white-color);
+    width: 100%;
+    height: 100px;
+    padding: 1rem 5%;
+    display: flex;
+    align-items: center;
+    transition: height 0.3s ease;
+  }
+
+  .logo {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    transition: font-size 0.3s ease;
+  }
+
+  .list {
+    display: flex;
+    align-items: center;
+    margin-inline-start: auto;
+    gap: 1rem;
+  }
+
+  .button {
+    background-color: var(--black-color);
+    border-radius: 3rem;
+    width: 160px;
+    color: var(--white-color);
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    text-align: center;
+    padding: 1rem 1.25rem;
+    margin-inline-start: 2rem;
+    transition:
+      width 0.3s ease,
+      padding 0.3s ease;
+  }
+
+  .header.isChange {
+    height: 80px;
+    
+    .logo {
+      font-size: var(--font-size-xl);
+    }
+
+    .button {
+      width: 120px;
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  function scrollHandler() {
+    const header = document.querySelector<HTMLHeadElement>(
+      '[data-header-container]',
+    );
+    const topScroll = window.scrollY || document.documentElement.scrollTop;
+    if (!header) return;
+    if (topScroll > 30) {
+      header.classList.add('isChange');
+    } else {
+      header.classList.remove('isChange');
+    }
+  }
+
+  document.addEventListener('scroll', scrollHandler);
+</script>

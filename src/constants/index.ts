@@ -31,10 +31,23 @@ export const NAVIGATION: Navigation[] = [
     href: '/navigation-color-change-mixblend',
     label: 'ナビゲーションカラーチェンジ（mix-blend-mode）',
   },
-  // {
-  //   href: '/tab',
-  //   label: 'タブ',
-  // },
+  {
+    href: '/tutorial-formrun',
+    label: 'FormRunチュートリアル',
+  },
+  {
+    href: '/form-a11y',
+    label: 'Form アクセシビリティ',
+  },
+  {
+    href: '/intaraction-a11y',
+    label: 'インタラクション アクセシビリティ',
+  },
+
+  {
+    href: '/animation',
+    label: 'アニメーション',
+  },
   // {
   //   href: '/modal',
   //   label: 'モーダル',
