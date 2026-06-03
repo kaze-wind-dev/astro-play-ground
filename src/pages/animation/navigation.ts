@@ -11,18 +11,18 @@ export const NAVIGATION: Navigation[] = [
   },
   {
     href: 'inertial-scroll/lenis',
-    label: '慣性スクロール(Lenis)'
+    label: '慣性スクロール(Lenis)',
   },
+  // {
+  //   href: 'inertial-scroll/js',
+  //   label: '慣性スクロール(js)',
+  // },
   {
-    href: 'inertial-scroll/js',
-    label: '慣性スクロール(js)'
+    href: 'parallax/lenis',
+    label: 'パララックス（Lenis）',
   },
-  {
-    href: 'parallax-animation/lenis',
-    label: 'パララックス・スクロール（Lenis）',
-  },
-  {
-    href: 'parallax-animation/js',
-    label: 'パララックス・スクロール（js）',
-  },
+  // {
+  //   href: 'parallax/js',
+  //   label: 'パララックス（js）',
+  // },
 ];

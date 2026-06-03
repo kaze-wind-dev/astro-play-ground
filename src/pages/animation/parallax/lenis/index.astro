@@ -1,0 +1,128 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="パララックス（Lenis）">
+  <PageTitle title="パララックス（Lenis）" />
+  <div class="container">
+    <div class="box -first" data-box-speed="0.5"></div>
+    <div class="box -second" data-box-speed="0.7"></div>
+    <div class="box -third" data-box-speed="0.4"></div>
+    <div class="box -forth" data-box-speed="2"></div>
+    <div class="box -fifth" data-box-speed="1.5"></div>
+    <div class="box -sixth" data-box-speed="2.1"></div>
+    <div class="box -seventh" data-box-speed="1"></div>
+    <div class="box -eighth" data-box-speed="1.8"></div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @import 'lenis/dist/lenis.css';
+
+  .container {
+    width: 100%;
+    height: 220vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .box {
+    position: absolute;
+    border-radius: 12px;
+    background-color: #eee;
+
+    &.-first {
+      width: 140px;
+      aspect-ratio: 1;
+      top: 4%;
+      left: 6%;
+      background-color: #e8edf3;
+    }
+
+    &.-second {
+      width: 200px;
+      aspect-ratio: 4 / 5;
+      top: 8%;
+      right: 8%;
+      background-color: #cdd9e6;
+    }
+
+    &.-third {
+      width: 160px;
+      aspect-ratio: 1;
+      top: 26%;
+      left: 22%;
+      background-color: #b0c2d6;
+    }
+
+    &.-forth {
+      width: 240px;
+      aspect-ratio: 5 / 4;
+      top: 34%;
+      right: 4%;
+      background-color: #94aec8;
+    }
+
+    &.-fifth {
+      width: 180px;
+      aspect-ratio: 1;
+      top: 52%;
+      left: 4%;
+      background-color: #7a9abb;
+    }
+
+    &.-sixth {
+      width: 150px;
+      aspect-ratio: 3 / 4;
+      top: 58%;
+      right: 26%;
+      background-color: #6286ae;
+    }
+
+    &.-seventh {
+      width: 200px;
+      aspect-ratio: 1;
+      top: 78%;
+      left: 30%;
+      background-color: #4c73a0;
+    }
+
+    &.-eighth {
+      width: 260px;
+      aspect-ratio: 4 / 3;
+      top: 84%;
+      right: 6%;
+      background-color: #355f8d;
+    }
+  }
+</style>
+
+<script>
+  import Lenis from 'lenis';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lenis = new Lenis({
+    autoRaf: true,
+  });
+
+  lenis.on('scroll', ScrollTrigger.update);
+  
+  gsap.utils.toArray<HTMLElement>('.box').forEach((el) => {
+    const speed = Number(el.dataset.boxSpeed) ?? 1;
+    gsap.to(el, {
+      y: -100 * speed,
+      scrollTrigger: {
+        trigger: '.container',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+        markers: true,
+      },
+    });
+  });
+
+</script>
