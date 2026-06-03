@@ -8,7 +8,6 @@ import PageTitle from '@/components/PageTitle.astro';
   <div class="container">
     <header class="header" data-header-container>
       <p class="logo">Logo</p>
-
       <ul class="list">
         <li class="item">
           <a href="" class="link">リンク1</a>
@@ -20,9 +19,15 @@ import PageTitle from '@/components/PageTitle.astro';
           <a href="" class="link">リンク3</a>
         </li>
       </ul>
-      <div class="a button">ボタン</div>
+      <a class="button">ボタン</a>
     </header>
   </div>
+  <!-- 
+  FVで重要な情報としてヘッダーナビゲーションをしっかり見せたいが、内容が多かったり、デザイン上ロゴを強調して見せたいかったり、スクロール時にコンテンツを圧迫するような場合に用いられる。
+  基本的には要素を小さくして、ヘッダーをスッキリ見せる。
+  アクセシビリティ的には、要素を消すことは望ましくないため、スクロール後に消えるような用途では極力避けるべきだと言えそう。
+  
+  -->
 </Layout>
 
 <style lang="scss">
@@ -76,7 +81,7 @@ import PageTitle from '@/components/PageTitle.astro';
 
   .header.isChange {
     height: 80px;
-    
+
     .logo {
       font-size: var(--font-size-xl);
     }
@@ -93,7 +98,7 @@ import PageTitle from '@/components/PageTitle.astro';
     const header = document.querySelector<HTMLHeadElement>(
       '[data-header-container]',
     );
-    const topScroll = window.scrollY || document.documentElement.scrollTop;
+    const topScroll = window.scrollY;
     if (!header) return;
     if (topScroll > 30) {
       header.classList.add('isChange');

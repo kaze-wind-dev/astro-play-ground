@@ -329,7 +329,9 @@ const pageTitle = '';
 
       const theme = topSection.dataset.theme as Theme;
       anchor.style.color =
-        theme && theme in colorByTheme ? colorByTheme[theme] : colorByTheme.white;
+        theme && theme in colorByTheme
+          ? colorByTheme[theme]
+          : colorByTheme.white;
     });
   };
 

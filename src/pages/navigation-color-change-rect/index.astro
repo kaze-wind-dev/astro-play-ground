@@ -285,7 +285,7 @@ const pageTitle = '';
           ? visibleSections.add(target)
           : visibleSections.delete(target);
       });
-     
+
       const shouldListen = visibleSections.size > 0 && mediaQuery.matches;
       syncListenerState(shouldListen);
     },
@@ -302,4 +302,3 @@ const pageTitle = '';
     syncListenerState(shouldListen);
   });
 </script>
-
