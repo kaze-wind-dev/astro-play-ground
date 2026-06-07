@@ -36,3 +36,9 @@ $breakpoints: (
     }
   }
 }
+
+@mixin focus() {
+  &:focus-visible {
+    @content;
+  }
+}

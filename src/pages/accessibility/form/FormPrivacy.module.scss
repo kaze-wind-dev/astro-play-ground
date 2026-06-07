@@ -1,0 +1,70 @@
+@use '@/styles/mixin' as *;
+@use '@/styles/functions' as *;
+@use '@/styles/variables' as *;
+
+.container {
+  display: grid;
+  margin-block-start: rem(48);
+  text-align: center;
+}
+
+.required {
+  padding: 0 rem(10);
+  margin-inline-start: rem(10);
+  border-radius: rem(8);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  background-color: var(--black-color);
+  color: var(--white-color);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.linkLabel {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.checkbox {
+  position: relative;
+  width: rem(16);
+  aspect-ratio: 1 / 1;
+  margin-inline-end: rem(8);
+  appearance: none;
+  cursor: pointer;
+
+  &:checked {
+    &::before {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: rem(12);
+      height: rem(6);
+      margin: auto;
+      content: '';
+      border-block-end: 2px solid var(--black-color);
+      border-inline-start: 2px solid var(--black-color);
+      rotate: -45deg;
+      translate: 0 -25%;
+    }
+  }
+}
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-start: rem(20);
+}
+
+.lead {
+  text-align: center;
+}

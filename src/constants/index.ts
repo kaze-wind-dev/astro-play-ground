@@ -36,7 +36,7 @@ export const NAVIGATION: Navigation[] = [
     label: 'FormRunチュートリアル',
   },
   {
-    href: '/form-a11y',
+    href: '/accessibility/form',
     label: 'Form アクセシビリティ',
   },
   {

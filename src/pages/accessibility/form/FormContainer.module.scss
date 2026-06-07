@@ -1,0 +1,75 @@
+@use '@/styles/mixin' as *;
+@use '@/styles/functions' as *;
+@use '@/styles/variables' as *;
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20);
+  max-width: rem(540);
+  margin: 0 auto;
+}
+
+.formRow {
+  display: flex;
+  gap: rem(10);
+  flex-direction: column;
+}
+
+.formLabel {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: rem(10);
+
+  label {
+    font-weight: 700;
+  }
+}
+
+.formButtonContainer {
+  display: flex;
+  gap: rem(10);
+  justify-content: center;
+  margin-block-start: rem(80);
+}
+
+.required {
+  padding: 0 rem(10);
+  margin-inline-start: rem(10);
+  border-radius: rem(8);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  background-color: var(--black-color);
+  color: var(--white-color);
+}
+
+input[type='text'],
+input[type='tel'],
+input[type='email'],
+select,
+textarea {
+  width: 100%;
+  padding: rem(20) 20px;
+  background-color: var(--bg-color);
+  border-radius: rem(10);
+
+  &.hasError {
+    border-color: var(--error-color);
+  }
+
+  @include focus {
+    outline-color: var(--black-color);
+    outline-offset: 2px;
+  }
+}
+
+textarea {
+  min-height: rem(185);
+}
+
+.confirmMessage,
+.successMessage,
+.errorMessage {
+  text-align: center;
+}

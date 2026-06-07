@@ -1,0 +1,21 @@
+---
+import Layout from '@/layout/Layout.astro';
+import FormContainer from './FormContainer';
+---
+
+<Layout pageTitle="Form アクセシビリティ">
+  <div class="form-wrapper">
+    <FormContainer client:load />
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/functions' as *;
+
+  .form-wrapper {
+    width: 90%;
+    max-width: 960px;
+    padding-block: rem(100);
+    margin-inline: auto;
+  }
+</style>
