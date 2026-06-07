@@ -1,0 +1,46 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="WEB Animation API チュートリアル">
+  <PageTitle title="WEB Animation API チュートリアル" />
+  <div class="container">
+    <div class="box"></div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  .container {
+    background-color: var(--bg-color);
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-block-end: var(--spacing-2xl);
+    }
+  }
+
+  .box {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLDivElement>('.box');
+  if (box) {
+    const styles = getComputedStyle(document.documentElement);
+    const secondary = styles.getPropertyValue('--secondary-color').trim();
+    const primary = styles.getPropertyValue('--primary-color').trim();
+
+    box.animate(
+      {
+        backgroundColor: [secondary, primary],
+      },
+      {
+        fill: 'forwards',
+        duration: 3000,
+      },
+    );
+  }
+</script>

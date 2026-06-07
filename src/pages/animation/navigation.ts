@@ -25,4 +25,16 @@ export const NAVIGATION: Navigation[] = [
   //   href: 'parallax/js',
   //   label: 'パララックス（js）',
   // },
+  // {
+  //   href: 'animation-api-tutorial',
+  //   label: 'WEB Animation API チュートリアル'
+  // },
+  {
+    href: 'animation-api-tutorial/basic',
+    label: 'WEB Animation API チュートリアル',
+  },
+  {
+    href: 'animation-api-tutorial/scroll',
+    label: 'WEB Animation API スクロールアニメーション',
+  },
 ];

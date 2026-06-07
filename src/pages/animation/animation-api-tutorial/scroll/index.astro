@@ -1,0 +1,250 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="WEB Animation API スクロール連動">
+  <PageTitle title="WEB Animation API スクロール連動" />
+  <p>下にスクロールしてください</p>
+  <div class="wrapper">
+    <section class="section" data-scroll-trigger="fade-up">
+      <h2 class="title">要素が順に出現する</h2>
+      <div class="container">
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+        <div class="box" data-fade-up></div>
+      </div>
+    </section>
+
+    <section class="section" data-scroll-trigger="cover">
+      <div class="row">
+        <div class="content">
+          <h2 class="title" data-item="title">要素の出現＋カバースライド</h2>
+          <div class="text" data-item="text">
+            <p>
+              頭もゴーシュのかっこうば団へ銀に下げ足でしょまし。まずはしばらくまっ黒なたというお父さんました。
+            </p>
+            <p>
+              生意気どしましことませはたそしてゴーシュのばかがいのなかをしかぱちぱち下手だだて、やつなんかゴーシュを来れものましまし。笑いすぎそれはひとを悪いまして夕方のからだのかっこう家へわらい第三いっしょ目のかっこうがしてきましな。鳥も夜とりていろない。床は三飛ん先生のようにすていた。楽長は外国大物たり何を引きさいてはじめた。
+            </p>
+            <p>
+              天井は沢山でいきなりとぶっつかって中を子のように云いてセロから答えてべつに風をたべるてきた。まるでぱっと楽譜を鼠を考えたませ。それもう少しに一つのむしって間に云えましまし。
+            </p>
+            <p>
+              糸を膨らんございでし。「かぶれをひきまし。ゴーシュ、みんなを野ねずみ。
+            </p>
+            <p>
+              まげ。」みんなはたくさんのときのりんこんどのままにふるえたまし。
+            </p>
+            <p>
+              ばかは扉でごゴーシュがなって鳥をセロがとまっがぶるぶる元来なおしがっませ上をはいっだまし。するする活動云いて、来て居りがいただいたてホールをそこで赤がまるでぺんはいりたませ。「子来。
+            </p>
+            <p>汗へいるた。しぞ。</p>
+            <p>
+              それもそれがざとじぶんのでやり直しとじゃ見る狸もいいのたてねえ。」誰もくたくたそうをわからてぞいっしょ長椅子を出しとなら気のセロにして終るとしで出しだ。ばかはなさいて壁へついましん。おまえはばたばたゴーシュは早くのたのでドレミファはずいぶんいいのたた。「たくさんの毎晩の音楽が。
+            </p>
+            <p>
+              だまっ。」何はどう弾きんない。眼はゴーシュが明けからはじめまし。すると今夜はねから続けたまし。むずかしいびっくりなっとあけよて行って萱になっようた鳥の弾きてそれからぴたっとゴーシュをぺんはいりんまし。
+            </p>
+            <p>
+              またかとあともてきっとまげたまして痛くことへはたくさんはわくのセロたたら。穴しかそれにたくさんたセロのなかいつにできたようにね狸あとに足をするてみんなかききんが云うていでしまし。「するとこう一生けん命のトロメライ。習え。」そらと云いとぶっつけたかと云いてそうドレミファのぐうぐうねむってしまいましたをいっぱい血走ってガラスたべるたた。
+            </p>
+            <p>
+              「それどころなく。まるで組んて行った。そのんもかっこうの写真たことた。何をどういうごくごく死んましものが。
+            </p>
+            <p>楽器。</p>
+            <p>
+              かっこうまでまるで二つ十時も恨めしふしましなあ。棒がみみずくを弾きて来これあたりをどんな金野ねずみきょろきょろやゴーシュげの扉までの子かっこうですわり込んて行ったいかにもきみのちがいはいきなり云いものた。小節楽長さま。君をはうたいんませてべ。糸というんをどんと起きあがっしまうん。
+            </p>
+          </div>
+        </div>
+        <div class="cover-item" data-item="cover"></div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../../../styles/mixin' as *;
+  @use '../../../../styles/functions' as *;
+
+  .wrapper {
+    padding-block: 100vh;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+    margin-block-end: var(--spacing-md);
+
+    &[data-item='title'] {
+      translate: 0 30px;
+      opacity: 0;
+    }
+  }
+
+  .section {
+    &:not(:last-child) {
+      margin-block-end: 100vh;
+    }
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: rem(16);
+  }
+
+  .box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--secondary-color);
+    opacity: 0;
+    translate: 0 30px;
+  }
+
+  .text {
+    p:not(:last-child) {
+      margin-block-end: var(--spacing-sm);
+    }
+
+    &[data-item='text'] {
+      translate: 0 30px;
+      opacity: 0;
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 540px;
+    gap: rem(40);
+  }
+
+  .cover-item {
+    background-color: var(--gray-color);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+
+    &[data-item='cover'] {
+      &::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        background-color: var(--white-color);
+        transform-origin: right;
+      }
+    }
+  }
+</style>
+
+<script>
+  const scrollTriggers = document.querySelectorAll<HTMLDivElement>(
+    '[data-scroll-trigger]',
+  );
+
+  const DELAY = 80;
+
+  // data-scroll-triggerの値によるMapを作成
+  const effects: Record<string, (section: HTMLElement) => void> = {
+    'fade-up': (section) =>
+      fadeUp(section.querySelectorAll<HTMLElement>('[data-fade-up]')),
+    cover: (section) => playCover(section),
+  };
+
+  // 単一要素のfadeUp
+  const fadeUpEl = (el: HTMLElement, delay: number = 0) => {
+    el.animate(
+      {
+        opacity: [0, 1],
+        translate: ['0px 30px', '0px'],
+      },
+      {
+        delay,
+        duration: 600,
+        fill: 'forwards',
+        easing: 'ease-out',
+      },
+    );
+  };
+
+  // 複数要素のfadeUp
+  const fadeUp = (els: NodeListOf<HTMLElement>) => {
+    els.forEach((el, index) => {
+      const delay = index * DELAY;
+      fadeUpEl(el, delay);
+    });
+  };
+
+  // 複数要素のdata-scroll-trigger="cover"到達時のアニメーション
+  const playCover = (el: HTMLElement) => {
+    if (!el) return;
+    const title = el.querySelector<HTMLHeadingElement>('[data-item="title"]');
+    const text = el.querySelector<HTMLDivElement>('[data-item="text"]');
+    const cover = el.querySelector<HTMLElement>('[data-item="cover"]');
+    if (!title || !text || !cover) return;
+
+    fadeUpEl(title);
+    // coverはtitleと同時再生
+    cover.animate(
+      { transform: ['scaleX(1)', 'scaleX(0)'] },
+      {
+        duration: 600,
+        fill: 'forwards',
+        easing: 'ease-out',
+        pseudoElement: '::before',
+      },
+    );
+    // textは300ms遅延
+    fadeUpEl(text, 300);
+  };
+
+  // intersection observerのコールバック
+  const callback = (
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver,
+  ) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      // sectionのdata属性をtypeとして格納
+      const type = (entry.target as HTMLElement).dataset.scrollTrigger;
+      // effectsのMapにある関数を実行
+      if (type && effects[type]) {
+        effects[type](entry.target as HTMLElement);
+        // 一度限り実行
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  // intersection observerのオプション
+  const options = {
+    root: null,
+    rootMargin: '-50% 0px -50% 0px',
+    threshold: 0,
+  };
+
+  const io = new IntersectionObserver(callback, options);
+  scrollTriggers.forEach((trigger) => io.observe(trigger));
+</script>
