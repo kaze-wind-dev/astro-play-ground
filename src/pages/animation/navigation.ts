@@ -37,4 +37,14 @@ export const NAVIGATION: Navigation[] = [
     href: 'animation-api-tutorial/scroll',
     label: 'WEB Animation API スクロールアニメーション',
   },
+
+  {
+    href: 'flip/web-animation-api',
+    label: 'FLIP / WEB Animation API',
+  },
+
+  {
+    href: 'flip/view-transition-api',
+    label: 'FLIP / View Transition API',
+  },
 ];

@@ -1,0 +1,291 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Heading2 from '@/components/Heading2.astro';
+---
+
+<Layout pageTitle="FLIP / WEB Animation API">
+  <PageTitle title="FLIP / WEB Animation API" />
+
+  <div class="wrapper">
+    <section class="section" data-scroll-trigger="fade-up">
+      <Heading2
+        class="title"
+        title="リストレイアウトとカードレイアウトを変更する"
+      />
+      <button class="button" data-button>切り替える</button>
+      <ul class="container" data-layout="list">
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+        <li class="item" data-item="list">
+          <p class="item-title">タイトル</p>
+          <p class="item-description">
+            文章が入ります文章が入ります文章が入ります
+          </p>
+          <div class="item-thumbnail"></div>
+        </li>
+      </ul>
+    </section>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../../../styles/mixin' as *;
+  @use '../../../../styles/functions' as *;
+
+  .container {
+    display: grid;
+    gap: rem(24);
+  }
+
+  .item {
+    padding: rem(20);
+    border-radius: rem(8);
+    border: 1px solid var(--light-gray-color);
+    display: grid;
+    gap: rem(12) rem(16);
+  }
+
+  .item-title {
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    grid-area: title;
+  }
+
+  .item-thumbnail {
+    background-color: var(--bg-color);
+    aspect-ratio: 1 / 1;
+    grid-area: thumb;
+  }
+
+  .item-description {
+    grid-area: description;
+  }
+
+  .container[data-layout='list'] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .item[data-item='list'] {
+    grid-template-areas:
+      'thumb title'
+      'thumb description';
+    grid-template-columns: rem(120) 1fr;
+
+    .item-title {
+      align-self: end;
+    }
+
+    .item-description {
+      align-self: start;
+    }
+  }
+
+  .container[data-layout='card'] {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .item[data-item='card'] {
+    grid-template-areas:
+      'thumb'
+      'title'
+      'description';
+
+    .item-title {
+      align-self: end;
+    }
+
+    .item-description {
+      align-self: start;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const button = document.querySelector<HTMLButtonElement>('[data-button]');
+    const container = document.querySelector<HTMLUListElement>('[data-layout]');
+    const items = document.querySelectorAll<HTMLLIElement>('[data-item]');
+
+    if (container && button && items.length > 0) {
+      button.addEventListener('click', function () {
+        const next = container.dataset.layout === 'list' ? 'card' : 'list';
+
+        const targets = Array.from(items).map((item) => ({
+          item,
+          title: item.querySelector<HTMLParagraphElement>('.item-title'),
+          description:
+            item.querySelector<HTMLParagraphElement>('.item-description'),
+          thumb: item.querySelector<HTMLElement>('.item-thumbnail'),
+        }));
+
+        const firsts = targets.map((t) => {
+          if (!t.item || !t.title || !t.description || !t.thumb) return;
+          return {
+            item: t.item.getBoundingClientRect(),
+            title: t.title.getBoundingClientRect(),
+            description: t.description.getBoundingClientRect(),
+            thumb: t.thumb.getBoundingClientRect(),
+          };
+        });
+
+        container.dataset.layout = next;
+        items.forEach((item) => (item.dataset.item = next));
+
+        targets.forEach((t, i) => {
+          if (!firsts[i] || !t.title || !t.description || !t.thumb) return;
+          const firstItem = firsts[i].item;
+          const firstThumb = firsts[i].thumb;
+          const firstTitle = firsts[i].title;
+          const firstDescription = firsts[i].description;
+          const lastItem = t.item.getBoundingClientRect();
+          const lastTitle = t.title.getBoundingClientRect();
+          const lastDescription = t.description.getBoundingClientRect();
+          const lastThumb = t.thumb.getBoundingClientRect();
+
+          flipBox(t.item, firstItem, lastItem);
+
+          flipChild(t.title, firstTitle, lastTitle, firstItem, lastItem, true);
+          flipChild(
+            t.description,
+            firstDescription,
+            lastDescription,
+            firstItem,
+            lastItem,
+            true,
+          );
+          flipChild(t.thumb, firstThumb, lastThumb, firstItem, lastItem, false);
+        });
+      });
+    }
+
+    function flipBox(el: HTMLElement, first: DOMRect, last: DOMRect) {
+      const dX = first.left - last.left;
+      const dY = first.top - last.top;
+      const sX = first.width / last.width;
+      const sY = first.height / last.height;
+      el.animate(
+        [
+          {
+            transform: `translate(${dX}px, ${dY}px) scale(${sX}, ${sY})`,
+            transformOrigin: 'top left',
+          },
+          {
+            transform: 'none',
+            transformOrigin: 'top left',
+          },
+        ],
+        {
+          duration: 300,
+        },
+      );
+    }
+  });
+
+  function flipChild(
+    el: HTMLElement,
+    first: DOMRect,
+    last: DOMRect,
+    firstP: DOMRect,
+    lastP: DOMRect,
+    keepCrisp: boolean,
+  ) {
+    // 親要素の比率
+    const sPx = firstP.width / lastP.width;
+    const sPy = firstP.height / lastP.height;
+    // 親要素の比率
+    // 親要素でscaleしている場合、子要素にも同様の比率がかかるめ、それを打ち消す
+    // (子オフセット - 親オフセット)は親から子要素の位置で計算するため
+    // 変更前に比率をかけるのは、変更前はscaleがあるが、変更後はtransformをなしにするため。
+    const dx = (first.left - firstP.left) / sPx - (last.left - lastP.left);
+    const dy = (first.top - firstP.top) / sPy - (last.top - lastP.top);
+    const sx = keepCrisp ? 1 / sPx : first.width / last.width / sPx;
+    const sy = keepCrisp ? 1 / sPy : first.height / last.height / sPy;
+
+    el.animate(
+      [
+        {
+          transformOrigin: 'top left',
+          transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+        },
+        { transformOrigin: 'top left', transform: 'none' },
+      ],
+      { duration: 300, easing: 'ease' },
+    );
+  }
+</script>
