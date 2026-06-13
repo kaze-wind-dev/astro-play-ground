@@ -37,7 +37,6 @@ export const NAVIGATION: Navigation[] = [
     href: 'animation-api-tutorial/scroll',
     label: 'WEB Animation API スクロールアニメーション',
   },
-
   {
     href: 'flip/web-animation-api',
     label: 'FLIP / WEB Animation API',
@@ -46,5 +45,9 @@ export const NAVIGATION: Navigation[] = [
   {
     href: 'flip/view-transition-api',
     label: 'FLIP / View Transition API',
+  },
+  {
+    href: 'text/gsap',
+    label: 'GSAP / Text Animation',
   },
 ];

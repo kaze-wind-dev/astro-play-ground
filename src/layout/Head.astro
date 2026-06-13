@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+
 import {
   SITE_NAME,
   SITE_DESCRIPTION,
@@ -11,11 +12,13 @@ type Props = {
   pageTitle?: string;
   description?: string;
   keywords?: string;
+  viewTransitions?: boolean;
 };
 const {
   pageTitle,
   description = SITE_DESCRIPTION,
   keywords = SITE_KEYWORDS,
+  viewTransitions = false,
 } = Astro.props;
 const title = pageTitle ? `${SITE_NAME} | ${pageTitle}` : SITE_NAME;
 const isProd = import.meta.env.PROD;
@@ -46,7 +49,8 @@ const ogImageUrl = new URL(SITE_IMAGE_PATH, Astro.site ?? Astro.url).toString();
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
-  <ClientRouter />
+
+  {viewTransitions && <ClientRouter />}
   {isProd && <GoogleAnalytics />}
   <script src="https://sdk.form.run/js/v2/formrun.js" is:inline></script>
 </head>

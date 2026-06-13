@@ -4,8 +4,8 @@ import PageTitle from '@/components/PageTitle.astro';
 import Heading2 from '@/components/Heading2.astro';
 ---
 
-<Layout pageTitle="FLIP / WEB Animation API">
-  <PageTitle title="FLIP / WEB Animation API" />
+<Layout pageTitle="FLIP / View Transition API">
+  <PageTitle title="FLIP / View Transition API" />
 
   <div class="wrapper">
     <section class="section" data-scroll-trigger="fade-up">
@@ -15,84 +15,84 @@ import Heading2 from '@/components/Heading2.astro';
       />
       <button class="button" data-button>切り替える</button>
       <ul class="container" data-layout="list">
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-0">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-1">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-2">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-3">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-4">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-5">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-6">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-7">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-8">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-9">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-10">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
           </p>
           <div class="item-thumbnail"></div>
         </li>
-        <li class="item" data-item="list">
+        <li class="item" data-item="list" style="view-transition-name: item-11">
           <p class="item-title">タイトル</p>
           <p class="item-description">
             文章が入ります文章が入ります文章が入ります
@@ -177,117 +177,22 @@ import Heading2 from '@/components/Heading2.astro';
 </style>
 
 <script>
-  // このページは ClientRouter 対象外。モジュールスクリプトは defer 実行のため
-  // この時点で DOM は構築済み → astro:page-load に頼らず直接初期化する。
-  {
-    const button = document.querySelector<HTMLButtonElement>('[data-button]');
-    const container = document.querySelector<HTMLUListElement>('[data-layout]');
-    const items = document.querySelectorAll<HTMLLIElement>('[data-item]');
+  const button = document.querySelector<HTMLButtonElement>('[data-button]');
+  const container = document.querySelector<HTMLUListElement>('[data-layout]');
+  const items = document.querySelectorAll<HTMLLIElement>('[data-item]');
 
-    if (container && button && items.length > 0) {
-      button.addEventListener('click', function () {
-        const next = container.dataset.layout === 'list' ? 'card' : 'list';
-
-        const targets = Array.from(items).map((item) => ({
-          item,
-          title: item.querySelector<HTMLParagraphElement>('.item-title'),
-          description:
-            item.querySelector<HTMLParagraphElement>('.item-description'),
-          thumb: item.querySelector<HTMLElement>('.item-thumbnail'),
-        }));
-
-        const firsts = targets.map((t) => {
-          if (!t.item || !t.title || !t.description || !t.thumb) return;
-          return {
-            item: t.item.getBoundingClientRect(),
-            title: t.title.getBoundingClientRect(),
-            description: t.description.getBoundingClientRect(),
-            thumb: t.thumb.getBoundingClientRect(),
-          };
-        });
-
+  if (container && button) {
+    button.addEventListener('click', () => {
+      const next = container.dataset.layout === 'list' ? 'card' : 'list';
+      if (!document.startViewTransition) {
         container.dataset.layout = next;
         items.forEach((item) => (item.dataset.item = next));
-
-        targets.forEach((t, i) => {
-          if (!firsts[i] || !t.title || !t.description || !t.thumb) return;
-          const firstItem = firsts[i].item;
-          const firstThumb = firsts[i].thumb;
-          const firstTitle = firsts[i].title;
-          const firstDescription = firsts[i].description;
-          const lastItem = t.item.getBoundingClientRect();
-          const lastTitle = t.title.getBoundingClientRect();
-          const lastDescription = t.description.getBoundingClientRect();
-          const lastThumb = t.thumb.getBoundingClientRect();
-
-          flipBox(t.item, firstItem, lastItem);
-
-          flipChild(t.title, firstTitle, lastTitle, firstItem, lastItem, true);
-          flipChild(
-            t.description,
-            firstDescription,
-            lastDescription,
-            firstItem,
-            lastItem,
-            true,
-          );
-          flipChild(t.thumb, firstThumb, lastThumb, firstItem, lastItem, false);
-        });
+        return;
+      }
+      document.startViewTransition(() => {
+        container.dataset.layout = next;
+        items.forEach((item) => (item.dataset.item = next));
       });
-    }
-
-    function flipBox(el: HTMLElement, first: DOMRect, last: DOMRect) {
-      const dX = first.left - last.left;
-      const dY = first.top - last.top;
-      const sX = first.width / last.width;
-      const sY = first.height / last.height;
-      el.animate(
-        [
-          {
-            transform: `translate(${dX}px, ${dY}px) scale(${sX}, ${sY})`,
-            transformOrigin: 'top left',
-          },
-          {
-            transform: 'none',
-            transformOrigin: 'top left',
-          },
-        ],
-        {
-          duration: 300,
-        },
-      );
-    }
-  }
-
-  function flipChild(
-    el: HTMLElement,
-    first: DOMRect,
-    last: DOMRect,
-    firstP: DOMRect,
-    lastP: DOMRect,
-    keepCrisp: boolean,
-  ) {
-    // 親要素の比率
-    const sPx = firstP.width / lastP.width;
-    const sPy = firstP.height / lastP.height;
-    // 親要素の比率
-    // 親要素でscaleしている場合、子要素にも同様の比率がかかるめ、それを打ち消す
-    // (子オフセット - 親オフセット)は親から子要素の位置で計算するため
-    // 変更前に比率をかけるのは、変更前はscaleがあるが、変更後はtransformをなしにするため。
-    const dx = (first.left - firstP.left) / sPx - (last.left - lastP.left);
-    const dy = (first.top - firstP.top) / sPy - (last.top - lastP.top);
-    const sx = keepCrisp ? 1 / sPx : first.width / last.width / sPx;
-    const sy = keepCrisp ? 1 / sPy : first.height / last.height / sPy;
-
-    el.animate(
-      [
-        {
-          transformOrigin: 'top left',
-          transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
-        },
-        { transformOrigin: 'top left', transform: 'none' },
-      ],
-      { duration: 300, easing: 'ease' },
-    );
+    });
   }
 </script>

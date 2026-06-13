@@ -1,15 +1,16 @@
 ---
 type Props = {
   pageTitle: string;
+  viewTransitions?: boolean;
 };
-const { pageTitle } = Astro.props;
+const { pageTitle, viewTransitions = false } = Astro.props;
 import Head from './Head.astro';
 import '@/styles/global.scss';
 import 'kiso.css';
 ---
 
 <html lang="ja">
-  <Head pageTitle={pageTitle} />
+  <Head pageTitle={pageTitle} viewTransitions={viewTransitions} />
   <body transition:animate="none">
     <main>
       <slot />

@@ -4,7 +4,7 @@ import PageTitle from '@/components/PageTitle.astro';
 import { fade } from 'astro:transitions';
 ---
 
-<Layout pageTitle="遷移アニメーション（Astro）">
+<Layout pageTitle="遷移アニメーション（Astro）" viewTransitions>
   <div transition:animate={fade({ duration: '1s' })}>
     <PageTitle title="遷移アニメーション（Astro）" />
     <div class="box"></div>
