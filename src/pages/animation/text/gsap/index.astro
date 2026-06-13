@@ -1,0 +1,38 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Section from '@/components/Section.astro';
+import BlurFadeIn from './components/BlurFadeIn.astro';
+import MultipleSlide from './components/MultipleSlide.astro';
+
+const pageTitle = 'GSAP Text Animation';
+---
+
+<Layout pageTitle={pageTitle}>
+  <PageTitle title={pageTitle} />
+
+  <Section>
+    <ul class="list">
+      <li class="item">
+        <BlurFadeIn text="ゆったりと出現" />
+      </li>
+      <li class="item">
+        <MultipleSlide  />
+      </li>
+    </ul>
+  </Section>
+</Layout>
+
+<style lang="scss">
+  .list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .item {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+  }
+</style>

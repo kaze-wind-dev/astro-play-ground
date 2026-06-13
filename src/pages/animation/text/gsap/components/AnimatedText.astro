@@ -1,0 +1,19 @@
+---
+type Props = {
+  text: string;
+  class?: string;
+};
+const { text, class: className, ...rest } = Astro.props;
+---
+
+<p class="visually-hidden">{text}</p>
+<span class:list={['chars', className]} aria-hidden="true" {...rest}>{text}</span>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+
+  .chars {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+  }
+</style>

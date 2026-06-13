@@ -1,0 +1,56 @@
+---
+import AnimatedText from './AnimatedText.astro';
+
+type Props = {
+  text: string;
+};
+const { text } = Astro.props;
+---
+
+<AnimatedText text={text} class="blur-fade" />
+
+<script>
+  import { gsap } from 'gsap';
+  import SplitText from 'gsap/SplitText';
+
+  // 学習的にクリーンアップありにしているが、この構成なら不要。
+  gsap.registerPlugin(SplitText);
+
+  let ctx: gsap.Context | null = null;
+  let splits: SplitText[] = [];
+  function cleanup() {
+    ctx?.revert();
+    ctx = null;
+    splits.forEach((split) => split.revert());
+    splits = [];
+  }
+
+  function init() {
+    cleanup();
+    let splits = SplitText.create('.blur-fade', {
+      type: 'chars',
+    });
+    ctx = gsap.context(() => {
+      document.fonts.ready.then(() => {
+        gsap.fromTo(
+          splits.chars,
+          {
+            autoAlpha: 0,
+            scale: 1.2,
+            filter: 'blur(.25em)',
+          },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 1,
+            stagger: 0.12,
+            ease: 'power3.out',
+            clearProps: 'filter',
+          },
+        );
+      });
+    });
+  }
+  init();
+</script>
