@@ -34,6 +34,11 @@ export const NAVIGATION: Navigation[] = [
     label: 'WEB Animation API チュートリアル',
   },
   {
+    href: 'animation-api-tutorial/method',
+    label: 'WEB Animation API メソッド',
+  },
+
+  {
     href: 'animation-api-tutorial/scroll',
     label: 'WEB Animation API スクロールアニメーション',
   },

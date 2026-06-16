@@ -1,0 +1,76 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="WEB Animation API メソッドの利用">
+  <PageTitle title="WEB Animation API メソッドの利用" />
+  <div class="container">
+    <div class="box"></div>
+    <div class="buttons">
+      <button class="button" data-button="play">Play</button>
+      <button class="button" data-button="pause">Pause</button>
+      <button class="button" data-button="reverse">Reverse</button>
+      <button class="button" data-button="update">updatePlaybackRate</button>
+    </div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  .container {
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-block-end: var(--spacing-2xl);
+    }
+  }
+
+  .box {
+    width: 100px;
+    border-radius: 0.5rem;
+    aspect-ratio: 1 / 1;
+    background-color: var(--secondary-color);
+  }
+
+  .buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-block-start: var(--spacing-2xl);
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLDivElement>('.box');
+  const playButton = document.querySelector<HTMLButtonElement>(
+    '.button[data-button="play"]',
+  );
+  const pauseButton = document.querySelector<HTMLButtonElement>(
+    '.button[data-button="pause"]',
+  );
+  const reverseButton = document.querySelector<HTMLButtonElement>(
+    '.button[data-button="reverse"]',
+  );
+  const updateButton = document.querySelector<HTMLButtonElement>(
+    '.button[data-button="update"]',
+  );
+
+  const anim = box?.animate(
+    {
+      translate: ['0%', '600px'],
+    },
+    {
+      fill: 'forwards',
+      duration: 3000,
+    },
+  );
+
+  console.log(anim);
+  playButton?.addEventListener('click', () => anim?.play()); // 再生
+  pauseButton?.addEventListener('click', () => anim?.pause()); // 一時停止
+  reverseButton?.addEventListener('click', () => anim?.reverse()); //逆再生
+  updateButton?.addEventListener('click', () => {
+    anim?.updatePlaybackRate(2); //再生速度
+    anim?.play();
+  });
+</script>
