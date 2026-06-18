@@ -1,0 +1,121 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="Scroll Scrub / Web Animation API">
+  <PageTitle title="Scroll Scrub / Web Animation API" />
+
+  <div class="container">
+    <div class="box"></div>
+    <div class="progress-wrapper">
+      <span class="progress-bar"></span>
+    </div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../../../styles/mixin' as *;
+  @use '../../../../styles/functions' as *;
+
+  .container {
+    height: 200vh;
+    width: 100%;
+    margin-block: 200vh;
+  }
+
+  .box {
+    position: sticky;
+    top: 50px;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 0.5rem;
+    background-color: var(--secondary-color);
+  }
+
+  .progress-wrapper {
+    background-color: var(--light-gray-color);
+    width: 600px;
+    border-radius: 5px;
+    height: 8px;
+    position: sticky;
+    top: calc(100vh - 64px);
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    background-color: var(--secondary-color);
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+
+<script>
+  const progressBar = document.querySelector<HTMLDivElement>('.progress-bar');
+  const box = document.querySelector<HTMLDivElement>('.box');
+  const container = document.querySelector<HTMLDivElement>('.container');
+
+  let ticking = false;
+
+  const DURATION = 1000;
+  const boxAnim = box?.animate(
+    {
+      rotate: ['0deg', '540deg'],
+    },
+    {
+      duration: DURATION,
+      easing: 'ease',
+      fill: 'both',
+    },
+  );
+
+  const barAnim = progressBar?.animate(
+    {
+      transform: ['scale(0, 1)', 'scale(1, 1)'],
+      transformOrigin: ['left', 'left'],
+    },
+    {
+      duration: DURATION,
+      easing: 'ease',
+      fill: 'both',
+    },
+  );
+
+  boxAnim?.pause();
+  barAnim?.pause();
+
+  function update() {
+    if (!container || !boxAnim || !barAnim || !window) return;
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const viewportHeight = viewport.height;
+
+    const rect = container?.getBoundingClientRect();
+    const top = rect?.top;
+
+    const current = viewportHeight / 2 - top; // スクロール現在位置
+    const range = rect.height + viewportHeight; // スクロール可能範囲
+
+    const raw = current / range; // スクロール現在位置 / スクロール可能範囲
+    const p = Math.min(1, Math.max(0, raw)); // 0 ~ 1の範囲
+
+    boxAnim.currentTime = p * DURATION;
+    barAnim.currentTime = p * DURATION;
+  }
+
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      update();
+      ticking = false;
+    });
+  });
+</script>
