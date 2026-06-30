@@ -1,0 +1,126 @@
+---
+
+---
+
+<div class="loader">
+  <svg
+    width="441"
+    height="151"
+    viewBox="0 0 441 151"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    class="logo"
+  >
+    <path
+      d="M399.441 31.6875V117H381.922V31.6875H399.441Z"
+      fill="none"
+      class="text"></path>
+    <path
+      d="M340.229 86.5898H318.491V72.8789H340.229C343.588 72.8789 346.323 72.332 348.432 71.2383C350.541 70.1055 352.084 68.543 353.061 66.5508C354.037 64.5586 354.526 62.3125 354.526 59.8125C354.526 57.2734 354.037 54.9102 353.061 52.7227C352.084 50.5352 350.541 48.7773 348.432 47.4492C346.323 46.1211 343.588 45.457 340.229 45.457H324.584V117H307.006V31.6875H340.229C346.909 31.6875 352.631 32.8984 357.397 35.3203C362.202 37.7031 365.873 41.0039 368.412 45.2227C370.952 49.4414 372.221 54.2656 372.221 59.6953C372.221 65.2031 370.952 69.9688 368.412 73.9922C365.873 78.0156 362.202 81.1211 357.397 83.3086C352.631 85.4961 346.909 86.5898 340.229 86.5898Z"
+      fill="none"
+      class="text"></path>
+    <path
+      d="M261.069 46.2773L237.866 117H219.174L250.873 31.6875H262.768L261.069 46.2773ZM280.346 117L257.084 46.2773L255.209 31.6875H267.221L299.096 117H280.346ZM279.291 85.2422V99.0117H234.233V85.2422H279.291Z"
+      fill="none"
+      class="text"></path>
+    <path
+      d="M173.244 46.2773L150.041 117H131.349L163.048 31.6875H174.943L173.244 46.2773ZM192.521 117L169.259 46.2773L167.384 31.6875H179.396L211.271 117H192.521ZM191.466 85.2422V99.0117H146.408V85.2422H191.466Z"
+      fill="none"
+      class="text"></path>
+    <path
+      d="M60.1836 103.465L77.1758 31.6875H86.668L88.8359 43.6406L70.7305 117H60.5352L60.1836 103.465ZM51.4531 31.6875L65.5156 103.465L64.3438 117H52.9766L34.0508 31.6875H51.4531ZM103.777 103.172L117.664 31.6875H135.066L116.199 117H104.832L103.777 103.172ZM92 31.6875L109.109 103.758L108.641 117H98.4453L80.2227 43.582L82.5664 31.6875H92Z"
+      fill="none"
+      class="text"></path>
+    <rect class="cover-second" width="441" height="151" fill="none"></rect>
+    <rect class="cover-first" width="441" height="151" fill="none"></rect>
+  </svg>
+</div>
+
+<style lang="scss">
+  @use '../../styles/variables' as *;
+  @use '../../styles/mixin' as *;
+
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: var(--wd-color-primary);
+    display: grid;
+    place-content: center;
+  }
+
+  .logo {
+    width: 80%;
+    display: block;
+  }
+
+  .cover-first {
+    fill: var(--wd-color-primary);
+    transform-origin: right;
+  }
+
+  .cover-second {
+    fill: var(--wd-color-on-primary);
+    transform-origin: right;
+  }
+
+  .text {
+    fill: var(--wd-color-on-primary);
+  }
+</style>
+
+<script>
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', playLoader);
+  } else {
+    playLoader();
+  }
+
+  async function playLoader() {
+    const coverFirst = document.querySelector<SVGRectElement>('.cover-first');
+    const coverSecond = document.querySelector<SVGRectElement>('.cover-second');
+    const loader = document.querySelector<SVGRectElement>('.loader');
+
+    await coverFirst?.animate(
+      {
+        transform: ['scale(1, 1)', 'scale(0, 1)'],
+      },
+      {
+        duration: 600,
+        delay: 300,
+
+        easing: 'ease-in-out',
+        fill: 'both',
+      },
+    ).finished;
+
+    await coverSecond?.animate(
+      {
+        transform: ['scale(1, 1)', 'scale(0, 1)'],
+      },
+      {
+        duration: 600,
+        delay: 150,
+        easing: 'ease-in-out',
+        fill: 'both',
+      },
+    ).finished;
+
+    await loader?.animate(
+      {
+        opacity: [1, 0],
+      },
+      {
+        duration: 300,
+        delay: 600,
+        easing: 'ease',
+      },
+    ).finished;
+
+    loader?.remove();
+  }
+</script>

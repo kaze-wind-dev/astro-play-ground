@@ -1,0 +1,18 @@
+---
+type Props = {
+  pageTitle: string;
+};
+const { pageTitle } = Astro.props;
+import Head from '@/layout/Head.astro';
+import '../styles/global.scss';
+import 'kiso.css';
+---
+
+<html lang="ja">
+  <Head pageTitle={pageTitle} />
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

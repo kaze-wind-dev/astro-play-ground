@@ -1,0 +1,45 @@
+---
+import PlayIcon from '../components/icon/PlayIcon.astro';
+import PauseIcon from '../components/icon/PauseIcon.astro';
+---
+
+<header class="header">
+  <div class="inner">
+    <p class="logo">WAAPI DEMO</p>
+    <button class="motion-controller">
+      <PlayIcon />
+      <PauseIcon />
+    </button>
+  </div>
+</header>
+
+<style lang="scss">
+  @use '../styles/variables' as *;
+  @use '../styles/mixin' as *;
+
+  .header {
+    position: fixed;
+    width: 90%;
+    inset-inline: 0;
+    inset-block-start: var(--spacing-lg);
+    margin-inline: auto;
+    border-radius: 5rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    box-shadow: 0 0 2rem
+      color-mix(in srgb, var(--wd-color-shadow) 20%, transparent 100%);
+  }
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: var(--fz-xl);
+    font-weight: 500;
+    font-family: var(--font-secondary);
+    letter-spacing: 0;
+    line-height: 1ch;
+  }
+</style>

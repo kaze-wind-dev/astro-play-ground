@@ -59,4 +59,8 @@ export const NAVIGATION: Navigation[] = [
     href: 'text/gsap',
     label: 'GSAP / Text Animation',
   },
+  {
+    href: 'waapi-demo',
+    label: 'WAAPI',
+  },
 ];

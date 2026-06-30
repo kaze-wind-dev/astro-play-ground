@@ -1,0 +1,85 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="Scroll Scrub / ViewTimeline">
+  <PageTitle title="Scroll Scrub / ViewTimeline" />
+
+  <div class="container">
+    <div class="box"></div>
+    <div class="progress-wrapper">
+      <span class="progress-bar"></span>
+    </div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '../../../../styles/mixin' as *;
+  @use '../../../../styles/functions' as *;
+
+  .container {
+    height: 200vh;
+    width: 100%;
+    margin-block: 200vh;
+  }
+
+  .box {
+    position: sticky;
+    top: 50px;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 0.5rem;
+    background-color: var(--secondary-color);
+  }
+
+  .progress-wrapper {
+    background-color: var(--light-gray-color);
+    width: 600px;
+    border-radius: 5px;
+    height: 8px;
+    position: sticky;
+    top: calc(100vh - 64px);
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    background-color: var(--secondary-color);
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: left;
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLDivElement>('.box');
+  const container = document.querySelector<HTMLDivElement>('.container');
+  const progressBar = document.querySelector<HTMLDivElement>('.progress-bar');
+
+  // ネイティブ非対応（Safari / Firefox）ではここで終わり。
+  // B方式（currentTime 手動）と違い polyfill 無しでは動かない。
+  if (box && container && progressBar && 'ViewTimeline' in window) {
+    // 進捗の供給源を「container の見え方」に差し替える。
+    // container がビューポートに入り始めた時 0、抜けきった時 1。
+    const timeline = new ViewTimeline({ subject: container });
+
+    const options = {
+      timeline,
+      // cover 0% = 入り始め / cover 100% = 抜けきり（省略時もこの値が既定）
+      rangeStart: 'cover 0%',
+      rangeEnd: 'cover 100%',
+      fill: 'both',
+    } as KeyframeAnimationOptions;
+
+    // pause も currentTime も scroll リスナーも update() も要らない。
+    // 進捗 → 再生位置の変換はブラウザが timeline 経由でやる。
+    box.animate({ rotate: ['0deg', '360deg'] }, options);
+    progressBar.animate({ transform: ['scaleX(0)', 'scaleX(1)'] }, options);
+  }
+</script>

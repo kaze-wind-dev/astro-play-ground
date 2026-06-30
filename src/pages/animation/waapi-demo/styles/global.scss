@@ -1,0 +1,19 @@
+@use 'mixin' as *;
+@use 'functions' as *;
+@use 'variables';
+@use 'base';
+
+.visually-hidden {
+  width: 1px;
+  height: 1px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: hidden;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: none;
+  visibility: visible;
+}
