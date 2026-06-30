@@ -21,10 +21,15 @@
   flex-shrink: 0;
   align-items: center;
   gap: rem(10);
+  font-weight: 700;
 
   label {
     font-weight: 700;
   }
+}
+
+.formField {
+  margin: 0;
 }
 
 .formButtonContainer {
@@ -35,7 +40,7 @@
 }
 
 .required {
-  padding: 0 rem(10);
+  padding: rem(4) rem(10);
   margin-inline-start: rem(10);
   border-radius: rem(8);
   font-size: 0.875rem;

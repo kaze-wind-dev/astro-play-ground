@@ -85,8 +85,9 @@ export default function FormContainer() {
             <div className={styles.formContainer}>
               <div className={styles.formRow}>
                 <div className={styles.formLabel}>
-                  <label htmlFor="name">名前</label>
-                  <span className={styles.required}>必須</span>
+                  <label htmlFor="name">
+                    名前<span className={styles.required}>必須</span>
+                  </label>
                 </div>
                 <div className={styles.formField}>
                   <input
@@ -109,8 +110,10 @@ export default function FormContainer() {
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formLabel}>
-                  <label htmlFor="email">メールアドレス</label>
-                  <span className={styles.required}>必須</span>
+                  <label htmlFor="email">
+                    メールアドレス
+                    <span className={styles.required}>必須</span>
+                  </label>
                 </div>
                 <div className={styles.formField}>
                   <input
@@ -179,8 +182,10 @@ export default function FormContainer() {
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formLabel}>
-                  <label htmlFor="message">お問い合わせ内容</label>
-                  <span className={styles.required}>必須</span>
+                  <label htmlFor="message">
+                    お問い合わせ内容
+                    <span className={styles.required}>必須</span>
+                  </label>
                 </div>
                 <div className={styles.formField}>
                   <textarea
@@ -219,46 +224,34 @@ export default function FormContainer() {
             入力内容を確認してください
           </p>
           <form onSubmit={onSubmit} className={styles.form}>
-            <div className={styles.formContainer}>
+            <dl className={styles.formContainer}>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="name">名前</label>
-                </div>
-                <div className={styles.formField}>{getValues('name')}</div>
+                <dt className={styles.formLabel}>名前</dt>
+                <dd className={styles.formField}>{getValues('name')}</dd>
               </div>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="email">メールアドレス</label>
-                </div>
-                <div className={styles.formField}>{getValues('email')}</div>
+                <dt className={styles.formLabel}>メールアドレス</dt>
+                <dd className={styles.formField}>{getValues('email')}</dd>
               </div>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="tel">電話番号</label>
-                </div>
-                <div className={styles.formField}>{getValues('tel')}</div>
+                <dt className={styles.formLabel}>電話番号</dt>
+                <dd className={styles.formField}>{getValues('tel')}</dd>
               </div>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="select">選択</label>
-                </div>
-                <div className={styles.formField}>{getValues('select')}</div>
+                <dt className={styles.formLabel}>選択</dt>
+                <dd className={styles.formField}>{getValues('select')}</dd>
               </div>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="message">お問い合わせ内容</label>
-                </div>
-                <div className={styles.formField}>{getValues('message')}</div>
+                <dt className={styles.formLabel}>お問い合わせ内容</dt>
+                <dd className={styles.formField}>{getValues('message')}</dd>
               </div>
               <div className={styles.formRow}>
-                <div className={styles.formLabel}>
-                  <label htmlFor="privacy">プライバシーポリシーの同意</label>
-                </div>
-                <div className={styles.formField}>
+                <dt className={styles.formLabel}>プライバシーポリシーの同意</dt>
+                <dd className={styles.formField}>
                   {getValues('privacy') ? '同意する' : '同意しない'}
-                </div>
+                </dd>
               </div>
-            </div>
+            </dl>
             <div className={styles.formButtonContainer}>
               <FormButton
                 type="button"

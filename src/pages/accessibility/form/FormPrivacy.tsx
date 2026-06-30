@@ -38,8 +38,8 @@ export const FormPrivacy = ({
         />
         <label className={styles.label} htmlFor="privacy">
           プライバシーポリシーに同意する
+          <span className={styles.required}>必須</span>
         </label>
-        <span className={styles.required}>必須</span>
       </div>
       {errors.privacy && (
         <ErrorText
