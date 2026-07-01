@@ -3,12 +3,16 @@ import Layout from './layout/Layout.astro';
 import Header from './layout/Header.astro';
 import Loader from './components/module/Loader.astro';
 import MainVisual from './components/module/MainVisual.astro';
+import Controllable from './components/module/Controllable.astro';
+import Stagger from './components/module/Stagger.astro';
+import ScrollLinked from './components/module/ScrollLinked.astro';
 ---
 
-<Layout pageTitle="WAAPI - デモストレーション">
+<Layout pageTitle="WAAPI - デモンストレーション">
   <Loader />
-  <main>
-    <Header />
-    <MainVisual/>
-  </main>
+  <Header />
+  <MainVisual />
+  <Controllable />
+  <Stagger />
+  <ScrollLinked />
 </Layout>

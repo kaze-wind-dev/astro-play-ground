@@ -1,8 +1,231 @@
 ---
+
 ---
 
-<div>
-  <h1>
-    Web Animation APIで
+<section class="main-visual" data-mv>
+  <p class="eyebrow">Web Animation API</p>
+  <h1 class="headline">
+    <span class="line"
+      ><span class="line-inner" data-mv-line>アニメーションを</span></span
+    >
+    <span class="line"
+      ><span class="line-inner" data-mv-line>コードで操作する</span></span
+    >
   </h1>
-</div>
+  <p class="lead" data-mv-fade>
+    element.animate() が返すのは Animation オブジェクトです。<br />
+    再生・停止・巻き戻しを、コードから操作できます。
+  </p>
+  <p class="cue" data-mv-fade aria-hidden="true">
+    SCROLL
+    <span class="cue-bar"
+      ><span class="cue-bar-thumb" data-cue-thumb></span></span
+    >
+  </p>
+
+  <!-- アニメ用フック: data-morph -->
+  <div class="morph" data-morph aria-hidden="true"></div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/variables' as *;
+  @use '../../styles/mixin' as *;
+
+  .main-visual {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: var(--spacing-md);
+    padding-inline: 5%;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: var(--font-secondary);
+    font-size: var(--fz-sm);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--wd-color-primary);
+    opacity: 0; // JS で分割後に 1 へ（各文字が個別にフェード）
+
+    // 一文字ずつ translate させるため inline-block に
+    :global(.char) {
+      display: inline-block;
+      white-space: pre;
+    }
+  }
+
+  .headline {
+    font-size: var(--heading-1);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .line {
+    display: block;
+    overflow: hidden; // 内側 span を y:100% から出すマスク
+  }
+
+  .line-inner {
+    display: block;
+    translate: 0 100%; // 初期状態（マスクの下に隠す）
+  }
+
+  .lead {
+    font-size: var(--fz-md);
+    line-height: 1.8;
+    color: var(--wd-color-on-surface-variant);
+  }
+
+  .cue {
+    font-family: var(--font-secondary);
+    font-size: var(--fz-xs);
+    letter-spacing: 0.3em;
+    color: var(--wd-color-outline);
+    margin-block-start: var(--spacing-2xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    justify-self: start;
+    width: max-content;
+  }
+
+  .cue-bar {
+    width: 1px;
+    height: 44px;
+    background-color: color-mix(
+      in srgb,
+      var(--wd-color-outline) 30%,
+      transparent
+    );
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cue-bar-thumb {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 40%;
+    background-color: var(--wd-color-primary);
+  }
+
+  // フェードイン系（lead / cue）の初期状態
+  [data-mv-fade] {
+    opacity: 0;
+  }
+
+  .morph {
+    width: clamp(320px, 14vw, 640px);
+    aspect-ratio: 1;
+    background-color: var(--wd-color-primary);
+    justify-self: end;
+    rotate: -10deg;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: 25% -80%;
+    border-radius: 40px;
+    opacity: 0; // 出現前の初期状態
+  }
+</style>
+
+<script>
+  // オープニング（① → ② → ③ の順で時間差再生）
+  const eyebrow =
+    document.querySelector<HTMLParagraphElement>('[data-mv] .eyebrow');
+  const lines = document.querySelectorAll<HTMLSpanElement>('[data-mv-line]');
+  const fadeItems = document.querySelectorAll<HTMLElement>('[data-mv-fade]');
+  const cueThumb = document.querySelector<HTMLElement>('[data-cue-thumb]');
+  const morph = document.querySelector<HTMLDivElement>('[data-morph]');
+
+  // Loader の完了（loader:finished）を受け取ってからオープニングを再生する
+  window.addEventListener(
+    'loader:finished',
+    () => {
+      // ① eyebrow: 一文字ずつ y:100% → -20% → 0（オーバーシュートして戻る）
+      if (eyebrow) {
+        const chars = [...(eyebrow.textContent ?? '')].map((ch) => {
+          const span = document.createElement('span');
+          span.className = 'char';
+          span.textContent = ch;
+          return span;
+        });
+        eyebrow.textContent = '';
+        chars.forEach((char) => eyebrow.appendChild(char));
+        eyebrow.style.opacity = '1'; // 器を表示（各文字は個別にフェード）
+
+        chars.forEach((char, i) => {
+          char.animate(
+            [
+              { opacity: 0, translate: '0 100%' },
+              { opacity: 1, offset: 0.6 }, // 上がりきる前にフェード完了
+              { translate: '0 0' },
+            ],
+            {
+              delay: 150 + i * 34,
+              duration: 620,
+              // オーバーシュートは easing に任せる（back）＝行き過ぎて戻る波
+              easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+              fill: 'both',
+            },
+          );
+        });
+      }
+
+      // ① headline: overflow:hidden の内側 span を y:100% → 0 で立ち上げる
+      lines.forEach((line, i) => {
+        line.animate(
+          { translate: ['0 100%', '0 0'] },
+          {
+            delay: 350,
+            duration: 800,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'both',
+          },
+        );
+      });
+
+      // ② .6秒後: lead / cue が y:30 からフェードイン
+      fadeItems.forEach((item, i) => {
+        item.animate(
+          { opacity: [0, 1], translate: ['0 30px', '0 0'] },
+          {
+            delay: 800 + i * 150,
+            duration: 650,
+            easing: 'ease-out',
+            fill: 'both',
+          },
+        );
+      });
+
+      // cue のスクロールバー（下方向に流れ続ける）
+      cueThumb?.animate(
+        { translate: ['0 -100%', '0 260%'] },
+        {
+          delay: 950,
+          duration: 2400,
+          iterations: Infinity,
+          easing: 'ease-in-out',
+        },
+      );
+
+      // ③ 一番最後に、ゆったり出現（他の要素が出そろってから）
+      morph?.animate(
+        { opacity: [0, 1] },
+        { delay: 1700, duration: 1200, easing: 'ease-out', fill: 'both' },
+      );
+      morph?.animate(
+        { rotate: ['-10deg', '350deg'] }, // -10deg 始まりで継ぎ目なくループ
+        {
+          delay: 1700, // 出現と同時に回り始める
+          duration: 12000,
+          iterations: Infinity,
+          easing: 'linear',
+        },
+      );
+    },
+    { once: true },
+  );
+</script>

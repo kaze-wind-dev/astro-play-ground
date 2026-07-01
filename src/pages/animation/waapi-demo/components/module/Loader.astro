@@ -122,5 +122,7 @@
     ).finished;
 
     loader?.remove();
+    // 完了を通知（Header / MainVisual が loader:finished を受け取る）
+    window.dispatchEvent(new Event('loader:finished'));
   }
 </script>
