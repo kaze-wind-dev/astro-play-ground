@@ -132,6 +132,8 @@
 </style>
 
 <script>
+  import { getIsMotion, onMotionChange } from '../../scripts/motion';
+
   // オープニング（① → ② → ③ の順で時間差再生）
   const eyebrow =
     document.querySelector<HTMLParagraphElement>('[data-mv] .eyebrow');
@@ -144,6 +146,10 @@
   window.addEventListener(
     'loader:finished',
     () => {
+      // 一回きりの演出は、isMotion が false のとき delay/duration を 0 にして
+      // 最終状態へ即座に切り替える（動かさずに見える形へ）。
+      const isMotion = getIsMotion();
+
       // ① eyebrow: 一文字ずつ y:100% → -20% → 0（オーバーシュートして戻る）
       if (eyebrow) {
         const chars = [...(eyebrow.textContent ?? '')].map((ch) => {
@@ -164,8 +170,8 @@
               { translate: '0 0' },
             ],
             {
-              delay: 150 + i * 34,
-              duration: 620,
+              delay: isMotion ? 150 + i * 34 : 0,
+              duration: isMotion ? 620 : 0,
               // オーバーシュートは easing に任せる（back）＝行き過ぎて戻る波
               easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
               fill: 'both',
@@ -175,12 +181,12 @@
       }
 
       // ① headline: overflow:hidden の内側 span を y:100% → 0 で立ち上げる
-      lines.forEach((line, i) => {
+      lines.forEach((line) => {
         line.animate(
           { translate: ['0 100%', '0 0'] },
           {
-            delay: 350,
-            duration: 800,
+            delay: isMotion ? 350 : 0,
+            duration: isMotion ? 800 : 0,
             easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
             fill: 'both',
           },
@@ -192,16 +198,28 @@
         item.animate(
           { opacity: [0, 1], translate: ['0 30px', '0 0'] },
           {
-            delay: 800 + i * 150,
-            duration: 650,
+            delay: isMotion ? 800 + i * 150 : 0,
+            duration: isMotion ? 650 : 0,
             easing: 'ease-out',
             fill: 'both',
           },
         );
       });
 
-      // cue のスクロールバー（下方向に流れ続ける）
-      cueThumb?.animate(
+      // ③ 一番最後に、ゆったり出現（他の要素が出そろってから）
+      morph?.animate(
+        { opacity: [0, 1] },
+        {
+          delay: isMotion ? 1700 : 0,
+          duration: isMotion ? 1200 : 0,
+          easing: 'ease-out',
+          fill: 'both',
+        },
+      );
+
+      // 継続するループ（cue のスクロールバー / morph の回転）は常に生成しておき、
+      // isMotion に追従させる。停止中は pause、再生中は play。
+      const cueLoop = cueThumb?.animate(
         { translate: ['0 -100%', '0 260%'] },
         {
           delay: 950,
@@ -210,21 +228,23 @@
           easing: 'ease-in-out',
         },
       );
-
-      // ③ 一番最後に、ゆったり出現（他の要素が出そろってから）
-      morph?.animate(
-        { opacity: [0, 1] },
-        { delay: 1700, duration: 1200, easing: 'ease-out', fill: 'both' },
-      );
-      morph?.animate(
+      const morphSpin = morph?.animate(
         { rotate: ['-10deg', '350deg'] }, // -10deg 始まりで継ぎ目なくループ
         {
-          delay: 1700, // 出現と同時に回り始める
+          delay: 1700,
           duration: 12000,
           iterations: Infinity,
           easing: 'linear',
         },
       );
+
+      onMotionChange((motion) => {
+        [cueLoop, morphSpin].forEach((anim) => {
+          if (!anim) return;
+          if (motion) anim.play();
+          else anim.pause();
+        });
+      });
     },
     { once: true },
   );

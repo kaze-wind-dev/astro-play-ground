@@ -74,6 +74,8 @@
 </style>
 
 <script>
+  import { getIsMotion } from '../../scripts/motion';
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', playLoader);
   } else {
@@ -84,6 +86,13 @@
     const coverFirst = document.querySelector<SVGRectElement>('.cover-first');
     const coverSecond = document.querySelector<SVGRectElement>('.cover-second');
     const loader = document.querySelector<SVGRectElement>('.loader');
+
+    // モーション無し: カバー演出を飛ばして、すぐ本編へ。
+    if (!getIsMotion()) {
+      loader?.remove();
+      window.dispatchEvent(new Event('loader:finished'));
+      return;
+    }
 
     await coverFirst?.animate(
       {

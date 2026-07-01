@@ -131,6 +131,8 @@
 </style>
 
 <script>
+  import { onMotionChange } from '../../scripts/motion';
+
   // ボタンから play / pause / reverse / playbackRate でアニメーション制御
   const card = document.querySelector<HTMLElement>('[data-controllable-card]');
   const buttons = document.querySelectorAll<HTMLButtonElement>('.ctrl');
@@ -150,6 +152,13 @@
         easing: 'ease-in-out',
       },
     );
+
+    // isMotion に追従: 停止中(false)はループを止め、再生中(true)は動かす。
+    // 登録直後にも一度呼ばれるので、初期状態（reduced なら静止）もこれで決まる。
+    onMotionChange((isMotion) => {
+      if (isMotion) anim.play();
+      else anim.pause();
+    });
 
     // Rate は候補を巡回させる
     const rates = [0.5, 1, 2];

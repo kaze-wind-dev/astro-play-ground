@@ -83,6 +83,8 @@ const bars = Array.from({ length: 12 });
 </style>
 
 <script>
+  import { getIsMotion } from '../../scripts/motion';
+
   // このセクションが視界に入ったら、delay をずらして「波」を再生する。
   const section = document.querySelector<HTMLElement>('[data-stagger]');
   const bars = document.querySelectorAll<HTMLSpanElement>(
@@ -93,13 +95,15 @@ const bars = Array.from({ length: 12 });
   const heights = [0.4, 0.6, 0.8, 1, 0.8, 0.6, 0.4, 0.6, 0.8, 1, 0.8, 0.5];
 
   // PARALLEL: 同じ動きを index 分だけ delay でずらす。
+  // isMotion が false のときは delay も duration も 0 にして、一斉に最終状態へ。
   function playParallel() {
+    const isMotion = getIsMotion();
     bars.forEach((bar, i) => {
       bar.animate(
         { transform: ['scaleY(0)', `scaleY(${heights[i]})`] },
         {
-          delay: i * 60,
-          duration: 700,
+          delay: isMotion ? i * 60 : 0,
+          duration: isMotion ? 700 : 0,
           easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
           fill: 'both',
         },

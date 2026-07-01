@@ -6,9 +6,14 @@ import PauseIcon from '../components/icon/PauseIcon.astro';
 <header class="header">
   <div class="inner">
     <p class="logo">WAAPI DEMO</p>
-    <button class="motion-controller">
-      <PlayIcon />
-      <PauseIcon />
+    <button
+      class="motion-controller"
+      type="button"
+      aria-pressed="false"
+      aria-label="アニメーションを再生"
+    >
+      <PlayIcon class="play" />
+      <PauseIcon class="pause" />
     </button>
   </div>
 </header>
@@ -43,19 +48,62 @@ import PauseIcon from '../components/icon/PauseIcon.astro';
     letter-spacing: 0;
     line-height: 1ch;
   }
+
+  .motion-controller {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+
+    // JS が付くまでは Pause を隠しておく（アイコンの二重表示防止）
+    :global(.pause) {
+      display: none;
+    }
+  }
 </style>
 
 <script>
-  // ① ヘッダーの登場: opacity 0 / y:-50px から降りてくる
-  // Loader の完了（loader:finished）を受け取ってから再生する
+  import { toggleMotion, onMotionChange, getIsMotion } from '../scripts/motion';
+
+  // 再生/停止ボタン: クリックで isMotion を反転させる。
+  const button = document.querySelector<HTMLButtonElement>('.motion-controller');
+  const playIcon = button?.querySelector<SVGElement>('.play');
+  const pauseIcon = button?.querySelector<SVGElement>('.pause');
+
+  button?.addEventListener('click', () => toggleMotion());
+
+  // isMotion に合わせてアイコンの表示と aria を切り替える。
+  //  - 再生中(true) → Pause を出す（押すと止まる）
+  //  - 停止中(false) → Play を出す（押すと動く）
+  onMotionChange((isMotion) => {
+    if (playIcon) playIcon.style.display = isMotion ? 'none' : 'inline-block';
+    if (pauseIcon) pauseIcon.style.display = isMotion ? 'inline-block' : 'none';
+    button?.setAttribute('aria-pressed', String(isMotion));
+    button?.setAttribute(
+      'aria-label',
+      isMotion ? 'アニメーションを停止' : 'アニメーションを再生',
+    );
+  });
+
+  // ① ヘッダーの登場: opacity 0 / y:-50px から降りてくる。
+  // Loader の完了（loader:finished）を受け取ってから再生する。
   const header = document.querySelector<HTMLElement>('.header');
   window.addEventListener(
     'loader:finished',
     () => {
-      header?.animate(
-        { opacity: [0, 1], translate: ['0 -50px', '0 0'] },
-        { duration: 800, easing: 'ease-out', fill: 'both' },
-      );
+      if (getIsMotion()) {
+        header?.animate(
+          { opacity: [0, 1], translate: ['0 -50px', '0 0'] },
+          { duration: 800, easing: 'ease-out', fill: 'both' },
+        );
+      } else if (header) {
+        // モーション無し: スライドさせず、最終状態で即表示
+        header.style.opacity = '1';
+        header.style.translate = '0 0';
+      }
     },
     { once: true },
   );
