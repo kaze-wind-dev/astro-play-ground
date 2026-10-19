@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 import react from '@astrojs/react';
+import glsl from 'vite-plugin-glsl';
 
 // const repository = process.env.GITHUB_REPOSITORY;
 // const [owner, repo] = repository ? repository.split('/') : [];
@@ -16,4 +17,7 @@ export default defineConfig({
   // site,
   // base,
   integrations: [sitemap(), react()],
+  vite: {
+    plugins: [glsl()],
+  },
 });

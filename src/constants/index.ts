@@ -48,6 +48,10 @@ export const NAVIGATION: Navigation[] = [
     href: '/animation',
     label: 'アニメーション',
   },
+  {
+    href: '/cg',
+    label: 'CG',
+  },
   // {
   //   href: '/modal',
   //   label: 'モーダル',

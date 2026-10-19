@@ -1,0 +1,175 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+import Section from '@/components/Section.astro';
+import Heading2 from '@/components/Heading2.astro';
+import Text from '@/components/Text.astro';
+
+const pageTitle = 'Shader';
+---
+
+<Layout pageTitle={pageTitle}>
+  <PageTitle title={pageTitle} />
+
+  <Section>
+    <Heading2 title="ハロー・ワールド（The Book of Shaders 02）" />
+    <Text>
+      <p>
+        ライブラリを使わず、WebGL2 を直接呼んで画面いっぱいの三角形に
+        フラグメントシェーダーを描いています。本と同じ GLSL ES 1.00
+        （<code>gl_FragColor</code> を使う書き方）なので、本のコードをそのまま貼れます。
+      </p>
+      <p>
+        シェーダーは
+        <code>src/pages/cg/shader/shaders/hello-world.frag</code> にあります。
+        編集して保存すると dev サーバーが reload するので、そのまま試せます。
+      </p>
+    </Text>
+
+    <canvas class="shader-canvas" data-shader-canvas></canvas>
+    <p class="shader-error" data-shader-error hidden></p>
+  </Section>
+
+  <Section>
+    <Heading2 title="ファイルの役割" />
+    <Text>
+      <dl class="note-list">
+        <dt><code>shaders/hello-world.frag</code></dt>
+        <dd>本の章のシェーダー。ここを書き換えて試す</dd>
+        <dt><code>shaders/fullscreen.vert</code></dt>
+        <dd>
+          全章共通の頂点シェーダー。本のオンラインエディタでは隠れているが、自前で動かすには必要
+        </dd>
+        <dt><code>scripts/gl.ts</code></dt>
+        <dd>コンパイル・リンク・描画ループだけを持つ最小ラッパー</dd>
+      </dl>
+    </Text>
+  </Section>
+
+  <Section>
+    <Heading2 title="渡している uniform" />
+    <Text>
+      <p>名前と意味は本に合わせています。02章では使いませんが、03章以降で登場します。</p>
+      <dl class="note-list">
+        <dt><code>u_time</code></dt>
+        <dd>float / 開始からの経過秒</dd>
+        <dt><code>u_resolution</code></dt>
+        <dd>vec2 / キャンバスの実ピクセルサイズ</dd>
+        <dt><code>u_mouse</code></dt>
+        <dd>vec2 / カーソル位置（左下原点の実ピクセル）</dd>
+      </dl>
+    </Text>
+  </Section>
+
+  <Section>
+    <Heading2 title="章の終わりの練習" />
+    <Text>
+      <ol class="exercise-list">
+        <li>浮動小数点型を整数型に置き換えてみる（カードによって通ることもエラーになることもある）</li>
+        <li><code>gl_FragColor</code> の行をコメントアウトして、好きな値を割り当ててみる</li>
+        <li>
+          特定の色を返す関数を用意して <code>main()</code> の中で使ってみる
+        </li>
+        <li>
+          <code>vec4</code> を作る別の書き方を探してみる（例：<code
+            >vec4(vec3(1.0, 0.0, 1.0), 1.0)</code
+          >）
+        </li>
+      </ol>
+      <p>
+        コンパイルに失敗したときは、本のように真っ白になる代わりに、キャンバスの下にエラーログを出しています。
+      </p>
+    </Text>
+  </Section>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/variables' as *;
+  @use '@/styles/functions' as *;
+  @use '@/styles/mixin' as *;
+
+  .shader-canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border-color);
+    border-radius: rem(4);
+    background-color: var(--light-gray-color);
+  }
+
+  .shader-error {
+    margin-block-start: var(--spacing-md);
+    padding: var(--spacing-md);
+    border: 1px solid currentcolor;
+    border-radius: rem(4);
+    color: var(--error-color);
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+  }
+
+  .note-list {
+    display: grid;
+    gap: var(--spacing-xs) var(--spacing-lg);
+
+    @include mq(md) {
+      grid-template-columns: auto 1fr;
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  .exercise-list {
+    display: grid;
+    gap: var(--spacing-sm);
+    padding-inline-start: 1.5em;
+    list-style: decimal;
+  }
+</style>
+
+<script>
+  import { createShaderCanvas } from './scripts/gl';
+  import vertex from './shaders/fullscreen.vert';
+  import fragment from './shaders/hello-world.frag';
+
+  const canvas = document.querySelector<HTMLCanvasElement>(
+    '[data-shader-canvas]',
+  );
+  const errorBox = document.querySelector<HTMLParagraphElement>(
+    '[data-shader-error]',
+  );
+
+  if (canvas) {
+    try {
+      const shader = createShaderCanvas({ canvas, vertex, fragment });
+
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      );
+
+      // 画面外では回し続けない
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry?.isIntersecting && !prefersReducedMotion.matches) {
+          shader.start();
+        } else {
+          shader.stop();
+        }
+      });
+      observer.observe(canvas);
+    } catch (error) {
+      // 真っ白な画面で悩まないよう、コンパイルエラーをそのまま出す
+      if (errorBox) {
+        errorBox.textContent =
+          error instanceof Error ? error.message : String(error);
+        errorBox.hidden = false;
+      }
+      console.error(error);
+    }
+  }
+</script>
