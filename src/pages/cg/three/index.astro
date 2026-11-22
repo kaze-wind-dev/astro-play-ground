@@ -1,0 +1,48 @@
+---
+import Layout from '@/layout/Layout.astro';
+---
+
+<Layout pageTitle="Three.js">
+  <h2>Three.js</h2>
+</Layout>
+
+<script>
+  import { callSafely } from 'astro:actions';
+  import * as THREE from 'three';
+
+  console.log(THREE);
+  const scene = new THREE.Scene(); // sceneの作成
+  // カメラの作成 視野角、アクセプト比など、どこからどう見えるのか
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000,
+  );
+
+  // レンダラーによって、サイズを設定して、canvasに描画する
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // レンダリングするオブジェクトを作成する
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+  });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  camera.position.z = 5;
+
+  // アニメーションの定義
+  function animate(time: number) {
+    // ユニフォーム変数と同じ？
+    renderer.render(scene, camera);
+    cube.rotation.x = time / 2000;
+    cube.rotation.y = time / 1000;
+  }
+
+  // アニメーションのループを設定
+  renderer.setAnimationLoop(animate);
+</script>
