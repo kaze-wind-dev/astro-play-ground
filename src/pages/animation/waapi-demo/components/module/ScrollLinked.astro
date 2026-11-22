@@ -73,7 +73,7 @@
   .dial {
     width: clamp(120px, 26vw, 200px);
     aspect-ratio: 1;
-    border-radius: 50%;
+    border-radius: 30px;
     background: conic-gradient(
       var(--wd-color-primary),
       var(--wd-color-tertiary),
@@ -105,12 +105,11 @@
   import { getIsMotion, onMotionChange } from '../../scripts/motion';
 
   // スクロール量を currentTime に変換して、pause() した Animation を手で送る。
-  // 再生ヘッド = スクロール位置。dial と thumb を同じ進捗 p で同期させる。
+  // dial と thumb を同じ進捗 p で同期させる。
   const section = document.querySelector<HTMLElement>('[data-scroll-linked]');
   const dial = document.querySelector<HTMLElement>('[data-dial]');
   const thumb = document.querySelector<HTMLElement>('[data-thumb]');
 
-  // duration は「尺の単位」でしかない。実時間では再生しないので任意でよい。
   const DURATION = 1000;
 
   const dialAnim = dial?.animate(
