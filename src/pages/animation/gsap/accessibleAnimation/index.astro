@@ -1,0 +1,58 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="gsap">
+  <PageTitle title="gsap" />
+  <div class="container">
+    
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+  @use '@/styles/variables' as *;
+
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/src/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const sections = gsap.utils.toArray('.section');
+
+  sections.forEach((section) => {
+    const content = section.querySelector('.content');
+    const title = section.querySelector('.title');
+
+    gsap.fromTo(
+      content,
+      { scale: 0.1 },
+      {
+        scale: 1,
+        scrollTrigger: {
+          // pin: section,
+          trigger: section,
+          start: 'top bottom',
+          end: 'top top',
+          pinSpacing: false,
+          scrub: true,
+        },
+      },
+    );
+
+    if (title) {
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: 'bottom 50%',
+        pin: title,
+        pinSpacing: false,
+      });
+    }
+  });
+</script>

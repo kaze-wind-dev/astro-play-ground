@@ -1,0 +1,43 @@
+---
+import Layout from '@/layout/Layout.astro';
+import PageTitle from '@/components/PageTitle.astro';
+---
+
+<Layout pageTitle="gsap">
+  <PageTitle title="gsap" />
+  <div class="container">
+    <div class="box"></div>
+  </div>
+</Layout>
+
+<style lang="scss">
+  @use '@/styles/mixin' as *;
+  @use '@/styles/functions' as *;
+  @use '@/styles/variables' as *;
+
+  .box {
+    width: 300px;
+    height: 300px;
+    border-radius: 20px;
+    background-color: var(--primary-color);
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  // メディアクエリを扱う
+  const mm = gsap.matchMedia();
+  // console.log(mm);
+
+  
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    gsap.from('.box', {
+      opacity: 0,
+      rotation: 360,
+      ease: 'power3.inOut',
+    });
+  });
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    gsap.from('.box', { opacity: 0 });
+  });
+</script>

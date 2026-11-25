@@ -51,7 +51,6 @@
   --wd-color-surface-container: rgb(244 235 243);
   --wd-color-surface-container-high: rgb(238 230 237);
   --wd-color-surface-container-highest: rgb(232 224 232);
-
   --fz-xs: #{calcClamp(11, 12, 375, 1024)};
   --fz-sm: #{calcClamp(13, 14, 375, 1024)};
   --fz-base: #{calcClamp(14, 15, 375, 1024)};
@@ -68,8 +67,8 @@
   --heading-4: #{calcClamp(20, 22, 375, 1024)};
   --heading-5: #{calcClamp(18, 20, 375, 1024)};
   --heading-6: #{calcClamp(16, 17, 375, 1024)};
-  --font-primary: "Zen Kaku Gothic New", sans-serif;
-  --font-secondary: "Roboto", sans-serif;
+  --font-primary: 'Zen Kaku Gothic New', sans-serif;
+  --font-secondary: 'Roboto', sans-serif;
   --spacing-xs: #{rem(8)};
   --spacing-sm: #{rem(12)};
   --spacing-md: #{rem(20)};
